@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS games_info;
-DROP TABLE IF EXISTS podium_position;
-DROP TABLE IF EXISTS contestant;
+DROP TABLE IF EXISTS games;
+DROP TABLE IF EXISTS positions;
+DROP TABLE IF EXISTS contestants;
 DROP TABLE IF EXISTS responses;
 DROP TABLE IF EXISTS questions;
 
@@ -9,7 +9,7 @@ CREATE TABLE games (
     -- game ID, to be exactly 4 characters
     game_id         CHAR(4) NOT NULL,
     -- season of the game, between 16 and 33
-    season          INT NOT NULL
+    season          INT NOT NULL,
     PRIMARY KEY (game_id)
 );
 
@@ -27,7 +27,7 @@ CREATE TABLE contestants (
     -- hometown state of the contestant
     hometown_state  VARCHAR(100) NOT NULL,
     -- occupation of the contestant
-    occupation      VARCHAR(100) NOT NULL,
+    occupation      VARCHAR(200) NOT NULL,
     PRIMARY KEY (player_id)
 );
 
@@ -35,11 +35,10 @@ CREATE TABLE contestants (
 CREATE TABLE positions (
     -- game ID, to be exactly 4 characters
     game_id         CHAR(4),
-    -- where player is standing (right, middle, returning champ)
-    seat_location   VARCHAR(20),
     -- player ID, to be exactly 5 characters
     player_id       CHAR(5) NOT NULL,
-    CHECK (seat_location IN ('right', 'middle', 'returning champ')),
+    -- where player is standing (right, middle, returning champ)
+    seat_location   VARCHAR(20),
     PRIMARY KEY (game_id, seat_location)
 );
 
@@ -50,7 +49,7 @@ CREATE TABLE responses (
     -- game ID, to be exactly 4 characters
     game_id             CHAR(4),
     -- round number of the question
-    round_num           INT,
+    round               CHAR(5),
     -- row index of question on the board
     row_idx             INT NOT NULL,
     -- column index of question on the board
@@ -58,10 +57,10 @@ CREATE TABLE responses (
     -- position of the contestant who answered the question, 
     correct_respondent  VARCHAR(15),
     -- position of the contestant who chose the question
-    asker  VARCHAR(15) NOT NULL,
+    asker               VARCHAR(15) NOT NULL,
     -- amount contestant wagered on the question, if Double Jeopardy
-    wager               INT,
-    PRIMARY KEY (game_id, round_num, row_idx, column_idx)
+    wager               VARCHAR(6),
+    PRIMARY KEY (game_id, round, row_idx, column_idx)
 );
 
 -- Stores questions, uniquely represented by their game_id
@@ -69,8 +68,8 @@ CREATE TABLE responses (
 CREATE TABLE questions (
     -- game ID, to be exactly 4 characters
     game_id             CHAR(4),
-    -- round number of the question
-    round_num           INT,
+    -- round of the question
+    round               CHAR(5),
     -- row index of question on the board
     row_idx             INT,
     -- column index of question on the board
@@ -80,8 +79,8 @@ CREATE TABLE questions (
     -- value of the question, in dollars
     value               INT NOT NULL,
     -- the question itself
-    question_text       VARCHAR(10000)
+    question_text       VARCHAR(1000),
     -- the answer to the question
-    answer              VARCHAR(10000)
-    PRIMARY KEY (game_id, round_num, row_idx, column_idx)
+    answer              VARCHAR(1000),
+    PRIMARY KEY (game_id, round, row_idx, column_idx)
 );

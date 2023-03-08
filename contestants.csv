@@ -1,4 +1,4 @@
-player_id,player_first_name,player_last_name,hometown_city,hometown_state,occupation
+player_id,first_name,last_name,hometown_city,hometown_state,occupation
 11367,Seth,Madej,Los Angeles,California,a writer
 11368,Rich,Steeves,Norwalk,Connecticut,a manager of commercial support content
 11363,Ragavan,Ramsubramani,New York,New York,a financial analyst
@@ -5986,7 +5986,7 @@ player_id,player_first_name,player_last_name,hometown_city,hometown_state,occupa
 6470,Carolyn,Zsoldos,Wilmington,Delaware,a clinical support specialist
 6471,Clay,Wilson,Hampton,Georgia,a newspaper reporter
 6463,Liz,Slaby,North East,Pennsylvania,a high school teacher
-6350,Steve,Hall,Hamden,Connecticut,"a nurse and ""Mr. Mom"""
+6350,Steve,Hall,Hamden,Connecticut,a nurse and Mr. Mom
 6206,Dave,Fuller,Midlothian,Virginia,a high school teacher
 6207,Tom,Walsh,Washington,D.C.,a writer
 6205,Meg,Wall-Wild,Madison,Wisconsin,a publications editor
