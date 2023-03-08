@@ -40,7 +40,8 @@ CREATE TABLE positions (
     seat_location   VARCHAR(20),
     -- player ID, to be up to 5 characters
     PRIMARY KEY (game_id, seat_location),
-    FOREIGN KEY (game_id) REFERENCES games (game_id)
+    FOREIGN KEY (game_id) REFERENCES games (game_id),
+    CHECK (seat_location IN ('right', 'middle', 'returning_champ'))
 );
 
 -- Stores response information (who answered questions),
@@ -49,8 +50,8 @@ CREATE TABLE positions (
 CREATE TABLE responses (
     -- game ID, to be up to 4 characters
     game_id             INT,
-    -- round number of the question
-    round               VARCHAR(2),
+    -- round number of the question (J, DJ, or final)
+    round               VARCHAR(5),
     -- row index of question on the board
     row_idx             INT,
     -- column index of question on the board
@@ -60,10 +61,12 @@ CREATE TABLE responses (
     -- position of the contestant who chose the question
     asker               VARCHAR(20) NOT NULL,
     -- amount contestant wagered on the question, if Daily Double
-    wager               INT,
+    wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     FOREIGN KEY (game_id, asker) 
-        REFERENCES positions (game_id, seat_location)
+        REFERENCES positions (game_id, seat_location),
+    CHECK (round IN ('J', 'DJ', 'final')),
+    CHECK (correct_respondent IN ('right', 'middle', 'returning_champ', NULL))
 );
 
 -- Stores questions, uniquely represented by their game_id
@@ -72,18 +75,19 @@ CREATE TABLE questions (
     -- game ID, to be exactly 4 characters
     game_id             INT,
     -- round of the question
-    round               VARCHAR(2),
+    round               VARCHAR(5),
     -- row index of question on the board
     row_idx             INT,
     -- column index of question on the board
     column_idx          INT,
     -- category of the question
-    category            VARCHAR(500) NOT NULL,
-    -- value of the question, in dollars
-    question_value      INT NOT NULL,
+    category            TEXT,
+    -- value of the question, in dollars (100-2000, -1 if final jeopardy)
+    question_value      VARCHAR(4) NOT NULL,
     -- the question itself
-    question_text       VARCHAR(1000),
+    question_text       TEXT,
     -- the answer to the question
-    answer              VARCHAR(1000),
-    PRIMARY KEY (game_id, round, row_idx, column_idx)
+    answer              TEXT,
+    PRIMARY KEY (game_id, round, row_idx, column_idx),
+    CHECK (round IN ('J', 'DJ', 'final'))
 );
