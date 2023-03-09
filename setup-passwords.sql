@@ -49,9 +49,17 @@ CREATE TABLE user_info (
 -- of 20 characters). Salts the password with a newly-generated salt value,
 -- and then the salt and hash values are both stored in the table.
 DELIMITER !
-CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20))
+CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20), is_admin TINYINT(1))
 BEGIN
-  -- TODO
+  DECLARE salt CHAR(8);
+  DECLARE temp_pass VARCHAR(28);
+  DECLARE hash_pass BINARY(64);
+
+  SET salt = make_salt(8);
+  SET temp_pass = CONCAT(salt, password);
+  set hash_pass = SHA2(temp_pass, 256);
+
+  INSERT INTO user_info VALUES (new_username, salt, hash_pass), is_admin;
 END !
 DELIMITER ;
 
@@ -63,15 +71,50 @@ DELIMITER !
 CREATE FUNCTION authenticate(username VARCHAR(20), password VARCHAR(20))
 RETURNS TINYINT DETERMINISTIC
 BEGIN
-  -- TODO
+  DECLARE salt CHAR(8);
+  DECLARE temp_pass VARCHAR(28);
+  DECLARE hash_pass BINARY(64);
+
+  -- check if the username is in the database
+  IF username NOT IN (SELECT user FROM user_info) 
+    THEN RETURN 0;
+  END IF;
+
+  -- check if the salted password is the same as what's in the database
+  SELECT salt, password_hash INTO salt, hash_pass 
+    FROM user_info 
+    WHERE username = user LIMIT 1;
+  
+  SET temp = CONCAT(salt, password);
+  IF SHA2(temp, 256) = hash_pass
+    THEN RETURN 1;
+  ELSE RETURN 0;
+  END IF;
 END !
 DELIMITER ;
 
 -- [Problem 1c]
 -- Add at least two users into your user_info table so that when we run this file,
 -- we will have examples users in the database.
-
+CALL sp_add_user('mborkar', 'il0veCS');
+CALL sp_add_user('rkurinch', 'f0rg0tPa$$w0rd')
 
 -- [Problem 1d]
 -- Optional: Create a procedure sp_change_password to generate a new salt and change the given
 -- user's password to the given password (after salting and hashing)
+DELIMITER !
+CREATE PROCEDURE sp_change_password(user VARCHAR(20), password VARCHAR(20))
+BEGIN
+  DECLARE salt CHAR(8);
+  DECLARE temp_pass VARCHAR(28);
+  DECLARE hash_pass BINARY(64);
+
+  SET salt = make_salt(8);
+  SET temp_pass = CONCAT(salt, password);
+  set hash_pass = SHA2(temp_pass, 256);
+
+  UPDATE user_info 
+    SET salt = salt, password_hash = hash_pass
+    WHERE username = user;
+END !
+DELIMITER ;
