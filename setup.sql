@@ -59,8 +59,8 @@ CREATE TABLE responses (
     -- position of the contestant who answered the question, 
     correct_respondent  VARCHAR(20),
     -- position of the contestant who chose the question
-    asker               VARCHAR(20) NOT NULL,
-    -- amount contestant wagered on the question, if Daily Double
+    asker               VARCHAR(20),
+    -- amount contestant wagered on the question
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     FOREIGN KEY (game_id, asker) 
