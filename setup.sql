@@ -76,7 +76,8 @@ CREATE TABLE responses (
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     FOREIGN KEY (game_id, chooser) 
-        REFERENCES positions (game_id, seat_location),
+        REFERENCES positions (game_id, seat_location)
+            ON UPDATE CASCADE,
     CHECK (round IN ('J', 'DJ', 'final')),
     CHECK (correct_respondent IN ('right', 'middle', 'returning_champ', NULL))
 );
