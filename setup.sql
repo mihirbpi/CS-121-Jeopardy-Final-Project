@@ -106,3 +106,5 @@ CREATE TABLE questions (
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     CHECK (round IN ('J', 'DJ', 'final'))
 );
+
+CREATE INDEX idx_question_value ON questions (question_value);
