@@ -11,6 +11,8 @@ CREATE TABLE games (
     game_id         INT,
     -- season of the game, between 16 and 33
     season          INT,
+    -- year that the season correpsonds to
+    year            YEAR,
     PRIMARY KEY (game_id)
 );
 
@@ -65,13 +67,13 @@ CREATE TABLE responses (
     -- round number of the question (J, DJ, or final)
     round               VARCHAR(5),
     -- row index of question on the board
-    row_idx             INT,
+    row_idx             TINYINT,
     -- column index of question on the board
-    column_idx          INT,
+    column_idx          TINYINT,
     -- position of the contestant who answered the question, 
     correct_respondent  VARCHAR(20),
     -- position of the contestant who chose the question
-    chooser               VARCHAR(20),
+    chooser             VARCHAR(20),
     -- amount contestant wagered on the question
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
@@ -90,9 +92,9 @@ CREATE TABLE questions (
     -- round of the question
     round               VARCHAR(5),
     -- row index of question on the board
-    row_idx             INT,
+    row_idx             TINYINT,
     -- column index of question on the board
-    column_idx          INT,
+    column_idx          TINYINT,
     -- category of the question
     category            TEXT,
     -- value of the question, in dollars (100-2000, -1 if final jeopardy)
