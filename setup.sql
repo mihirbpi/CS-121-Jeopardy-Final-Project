@@ -2,6 +2,7 @@ DROP TABLE IF EXISTS questions;
 DROP TABLE IF EXISTS responses;
 DROP TABLE IF EXISTS positions;
 DROP TABLE IF EXISTS contestants;
+DROP TABLE IF EXISTS plays;
 DROP TABLE IF EXISTS games;
 
 -- Stores game information, uniquely represented by their game_id.
