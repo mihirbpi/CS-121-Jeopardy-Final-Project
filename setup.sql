@@ -71,7 +71,7 @@ CREATE TABLE responses (
     -- position of the contestant who answered the question, 
     correct_respondent  VARCHAR(20),
     -- position of the contestant who chose the question
-    chooser               VARCHAR(20),
+    chooser             VARCHAR(20),
     -- amount contestant wagered on the question
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
@@ -104,3 +104,5 @@ CREATE TABLE questions (
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     CHECK (round IN ('J', 'DJ', 'final'))
 );
+
+CREATE INDEX idx_question_value ON questions (question_value);
