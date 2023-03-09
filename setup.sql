@@ -31,6 +31,17 @@ CREATE TABLE contestants (
     PRIMARY KEY (player_id)
 );
 
+-- Stores podium information in each game.
+CREATE TABLE plays (
+    -- game ID, to be up to 4 characters
+    game_id         INT,
+    seat_location   VARCHAR(20),
+    -- player ID, to be up to 5 characters
+    PRIMARY KEY (game_id, seat_location),
+    FOREIGN KEY (game_id) REFERENCES games (game_id),
+    CHECK (seat_location IN ('right', 'middle', 'returning_champ'))
+);
+
 -- Stores podium information for each player in a game.
 CREATE TABLE positions (
     -- game ID, to be up to 4 characters
@@ -59,11 +70,11 @@ CREATE TABLE responses (
     -- position of the contestant who answered the question, 
     correct_respondent  VARCHAR(20),
     -- position of the contestant who chose the question
-    asker               VARCHAR(20),
+    chooser               VARCHAR(20),
     -- amount contestant wagered on the question
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
-    FOREIGN KEY (game_id, asker) 
+    FOREIGN KEY (game_id, chooser) 
         REFERENCES positions (game_id, seat_location),
     CHECK (round IN ('J', 'DJ', 'final')),
     CHECK (correct_respondent IN ('right', 'middle', 'returning_champ', NULL))
