@@ -12,7 +12,7 @@ CREATE TABLE games (
     -- season of the game, between 16 and 33
     season          INT,
     -- year that the season correpsonds to
-    year            YEAR,
+    game_year       YEAR,
     PRIMARY KEY (game_id)
 );
 
