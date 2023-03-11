@@ -149,5 +149,5 @@ mysql> SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.c
 +-------------+
 1 row in set (0.04 sec)
 
-An index on category makes this query about twice as fast
+We see that an index on category makes this query about twice as fast
 */
