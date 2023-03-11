@@ -96,7 +96,7 @@ CREATE TABLE questions (
     -- column index of question on the board
     column_idx          TINYINT,
     -- category of the question
-    category            TEXT,
+    category            VARCHAR(254),
     -- value of the question, in dollars (100-2000, -1 if final jeopardy)
     question_value      VARCHAR(4) NOT NULL,
     -- the question itself
@@ -107,4 +107,47 @@ CREATE TABLE questions (
     CHECK (round IN ('J', 'DJ', 'final'))
 );
 
-CREATE INDEX idx_question_value ON questions (question_value);
+CREATE INDEX idx_category ON questions (category);
+
+/*
+Index: CREATE INDEX idx_category ON questions (category);
+
+Use the following query to test the index:
+SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.category BETWEEN 'FOOD' AND 'GRIT';
+
+Before index:
+mysql> SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.category BETWEEN 'FOOD' AND 'GRIT';
++-------------+
+| total_value |
++-------------+
+|     7803000 |
++-------------+
+1 row in set (0.16 sec)
+
+mysql> SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.category BETWEEN 'FOOD' AND 'GRIT';
++-------------+
+| total_value |
++-------------+
+|     7803000 |
++-------------+
+1 row in set (0.14 sec)
+
+After index:
+mysql> SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.category BETWEEN 'FOOD' AND 'GRIT';
++-------------+
+| total_value |
++-------------+
+|     7803000 |
++-------------+
+1 row in set (0.03 sec)
+
+mysql> SELECT SUM(q.question_value) AS total_value FROM questions AS q WHERE q.category BETWEEN 'FOOD' AND 'GRIT';
++-------------+
+| total_value |
++-------------+
+|     7803000 |
++-------------+
+1 row in set (0.04 sec)
+
+An index on category makes this query about twice as fast
+*/
