@@ -109,8 +109,6 @@ CREATE TABLE questions (
     column_idx          TINYINT,
     -- category of the question
     category            VARCHAR(254),
-    -- value of the question, in dollars (100-2000, -1 if final jeopardy)
-    question_value      VARCHAR(4) NOT NULL,
     -- the question itself
     question_text       TEXT,
     -- the answer to the question
