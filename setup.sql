@@ -84,6 +84,18 @@ CREATE TABLE responses (
     CHECK (correct_respondent IN ('right', 'middle', 'returning_champ', NULL))
 );
 
+-- Stores value of question based on its location on the board and the round.
+CREATE TABLE value_mapping (
+    -- round of the question
+    round               VARCHAR(5),
+    -- row index of question on the board
+    row_idx             TINYINT,
+    -- value of the question, in dollars (100-2000, -1 if final jeopardy)
+    question_value      VARCHAR(4) NOT NULL,
+    PRIMARY KEY (round, row_idx),
+    CHECK (round IN ('J', 'DJ', 'final'))
+);
+
 -- Stores questions, uniquely represented by their game_id
 -- and its location on the game board for each round.
 CREATE TABLE questions (
