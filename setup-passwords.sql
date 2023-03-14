@@ -1,7 +1,9 @@
--- File for Password Management section of Final Project
+ -- File for Password Management section of Final Project
 
 -- (Provided) This function generates a specified number of characters for using as a
 -- salt in passwords.
+DROP FUNCTION IF EXISTS make_salt;
+
 DELIMITER !
 CREATE FUNCTION make_salt(num_chars INT) 
 RETURNS VARCHAR(20) NOT DETERMINISTIC
@@ -29,6 +31,8 @@ DELIMITER ;
 -- You may extend that table to include an is_admin or role attribute if you 
 -- have admin or other roles for users in your application 
 -- (e.g. store managers, data managers, etc.)
+DROP TABLE IF EXISTS user_info;
+
 CREATE TABLE user_info (
     -- Usernames are up to 20 characters.
     username VARCHAR(20) PRIMARY KEY,
@@ -41,15 +45,20 @@ CREATE TABLE user_info (
     -- represented as 2 characters.  Thus, 256 / 8 * 2 = 64.
     -- We can use BINARY or CHAR here; BINARY simply has a different
     -- definition for comparison/sorting than CHAR.
-    password_hash BINARY(64) NOT NULL
+    password_hash BINARY(64) NOT NULL,
+
+    -- Indicates whether the user is an administrator
+    is_admin TINYINT NOT NULL
 );
 
 -- [Problem 1a]
 -- Adds a new user to the user_info table, using the specified password (max
 -- of 20 characters). Salts the password with a newly-generated salt value,
 -- and then the salt and hash values are both stored in the table.
+DROP PROCEDURE IF EXISTS sp_add_user;
+
 DELIMITER !
-CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20), is_admin TINYINT(1))
+CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20), is_admin TINYINT)
 BEGIN
   DECLARE salt CHAR(8);
   DECLARE temp_pass VARCHAR(28);
@@ -59,7 +68,7 @@ BEGIN
   SET temp_pass = CONCAT(salt, password);
   set hash_pass = SHA2(temp_pass, 256);
 
-  INSERT INTO user_info VALUES (new_username, salt, hash_pass), is_admin;
+  INSERT INTO user_info VALUES (new_username, salt, hash_pass, is_admin);
 END !
 DELIMITER ;
 
@@ -67,6 +76,8 @@ DELIMITER ;
 -- Authenticates the specified username and password against the data
 -- in the user_info table.  Returns 1 if the user appears in the table, and the
 -- specified password hashes to the value for the user. Otherwise returns 0.
+DROP FUNCTION IF EXISTS authenticate;
+
 DELIMITER !
 CREATE FUNCTION authenticate(username VARCHAR(20), password VARCHAR(20))
 RETURNS TINYINT DETERMINISTIC
@@ -76,17 +87,17 @@ BEGIN
   DECLARE hash_pass BINARY(64);
 
   -- check if the username is in the database
-  IF username NOT IN (SELECT user FROM user_info) 
+  IF username NOT IN (SELECT username FROM user_info) 
     THEN RETURN 0;
   END IF;
 
   -- check if the salted password is the same as what's in the database
-  SELECT salt, password_hash INTO salt, hash_pass 
+  SELECT user_info.salt, user_info.password_hash INTO salt, hash_pass 
     FROM user_info 
-    WHERE username = user LIMIT 1;
+    WHERE user_info.username = username LIMIT 1;
   
-  SET temp = CONCAT(salt, password);
-  IF SHA2(temp, 256) = hash_pass
+  SET temp_pass = CONCAT(salt, password);
+  IF SHA2(temp_pass, 256) = hash_pass
     THEN RETURN 1;
   ELSE RETURN 0;
   END IF;
@@ -96,12 +107,15 @@ DELIMITER ;
 -- [Problem 1c]
 -- Add at least two users into your user_info table so that when we run this file,
 -- we will have examples users in the database.
-CALL sp_add_user('mborkar', 'il0veCS');
-CALL sp_add_user('rkurinch', 'f0rg0tPa$$w0rd')
+CALL sp_add_user('Rupa', 'nopasswords', 0);
+CALL sp_add_user('Mihir', 'iloveCS', 1);
+
 
 -- [Problem 1d]
 -- Optional: Create a procedure sp_change_password to generate a new salt and change the given
 -- user's password to the given password (after salting and hashing)
+DROP PROCEDURE IF EXISTS sp_change_password;
+
 DELIMITER !
 CREATE PROCEDURE sp_change_password(user VARCHAR(20), password VARCHAR(20))
 BEGIN

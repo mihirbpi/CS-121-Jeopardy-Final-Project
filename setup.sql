@@ -72,9 +72,9 @@ CREATE TABLE responses (
     -- column index of question on the board
     column_idx          TINYINT,
     -- position of the contestant who answered the question, 
-    correct_respondent  VARCHAR(20),
+    correct_respondent  VARCHAR(100),
     -- position of the contestant who chose the question
-    chooser             VARCHAR(20),
+    chooser             VARCHAR(100),
     -- amount contestant wagered on the question
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
