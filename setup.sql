@@ -39,6 +39,7 @@ CREATE TABLE contestants (
 CREATE TABLE plays (
     -- game ID, to be up to 4 characters
     game_id         INT,
+    -- where players are standing (right, middle, returning_champ)
     seat_location   VARCHAR(20),
     -- player ID, to be up to 5 characters
     PRIMARY KEY (game_id, seat_location),
@@ -50,10 +51,10 @@ CREATE TABLE plays (
 CREATE TABLE positions (
     -- game ID, to be up to 4 characters
     game_id         INT,
-    -- where player is standing (right, middle, returning_champ)
-    player_id       INT,
-    seat_location   VARCHAR(20),
     -- player ID, to be up to 5 characters
+    player_id       INT,
+    -- where player is standing (right, middle, returning_champ)
+    seat_location   VARCHAR(20),
     PRIMARY KEY (game_id, seat_location),
     FOREIGN KEY (game_id) REFERENCES games (game_id),
     CHECK (seat_location IN ('right', 'middle', 'returning_champ'))
@@ -76,6 +77,8 @@ CREATE TABLE responses (
     -- position of the contestant who chose the question
     chooser             VARCHAR(100),
     -- amount contestant wagered on the question
+    -- did not use numeric since whole number of dollars and issues with 
+    -- blanks in data
     wager               VARCHAR(7),
     PRIMARY KEY (game_id, round, row_idx, column_idx),
     FOREIGN KEY (game_id, chooser) 
@@ -113,6 +116,8 @@ CREATE TABLE value_mapping (
     -- row index of question on the board
     row_idx             TINYINT,
     -- value of the question, in dollars (100-2000, -1 if final jeopardy)
+    -- did not use numeric since whole number of dollars and issues with 
+    -- blanks in data
     question_value      VARCHAR(4) NOT NULL,
     PRIMARY KEY (round, row_idx),
     CHECK (round IN ('J', 'DJ', 'final'))
