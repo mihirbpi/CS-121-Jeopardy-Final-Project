@@ -17,7 +17,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = True
+DEBUG = False
 
 
 # ----------------------------------------------------------------------
@@ -98,13 +98,14 @@ def authenticate_user(username, password):
         cursor.execute(sql)
         # row = cursor.fetchone()
         rows = cursor.fetchall()
+        login = None
         for row in rows:
             (login) = (row) # tuple unpacking!
             # do stuff with row data
-            if(not login[0]):
-                print("Incorrect username and/or password")
-                return False
-            return True
+        if(not login or not login[0]):
+            print("Incorrect username and/or password")
+            return False
+        return True
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
@@ -155,7 +156,6 @@ def main():
     """
     if (login()):
         show_client_options()
-
 
 if __name__ == '__main__':
     # This conn is a global object that other functions can access.

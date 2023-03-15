@@ -17,7 +17,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = True
+DEBUG = False
 
 
 # ----------------------------------------------------------------------
@@ -31,11 +31,11 @@ def get_conn():
     try:
         conn = mysql.connector.connect(
           host='localhost',
-          user='jeopardyadmin',
+          user='jeopardyclient',
           # Find port in MAMP or MySQL Workbench GUI or with
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
-          password='adminpw',
+          password='clientpw',
           database='jeopardydb' # replace this with your database name
         )
         print('Successfully connected.')
@@ -59,28 +59,27 @@ def get_conn():
 # ----------------------------------------------------------------------
 # Functions for Command-Line Options/Query Execution
 # ----------------------------------------------------------------------
-def example_query():
-    param1 = ''
+def season_from_gameid(game_id):
     cursor = conn.cursor()
     # Remember to pass arguments as a tuple like so to prevent SQL
     # injection.
-    sql = 'SELECT col1 FROM table WHERE col2 = \'%s\';' % (param1, )
+    sql = 'SELECT game_to_season(\'%s\') AS s;' % (game_id)
     try:
         cursor.execute(sql)
         # row = cursor.fetchone()
         rows = cursor.fetchall()
+        result = None
         for row in rows:
-            (col1val) = (row) # tuple unpacking!
+            (result) = (row) # tuple unpacking!
             # do stuff with row data
+        print("Season: " + str(result[0]))
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr(err)
+            sys.stderr.write(err)
             sys.exit(1)
         else:
-            # TODO: Please actually replace this :) 
-            sys.stderr('An error occurred, give something useful for clients...')
-
+            sys.stderr.write('Please make sure you enter a valid integer Jeopardy! game_id\n')
 
 
 # ----------------------------------------------------------------------
@@ -91,29 +90,62 @@ def example_query():
 # choose how to implement these depending on whether you have app.py or
 # app-client.py vs. app-admin.py (in which case you don't need to
 # support any prompt functionality to conditionally login to the sql database)
-
-
+def authenticate_user(username, password):
+    cursor = conn.cursor()
+    # Remember to pass arguments as a tuple like so to prevent SQL
+    # injection.
+    sql = 'SELECT authenticate(\'%s\', \'%s\') AS login, is_admin FROM user_info WHERE username=\'%s\';' % (username, password, username)
+    try:
+        cursor.execute(sql)
+        # row = cursor.fetchone()
+        rows = cursor.fetchall()
+        login = None
+        for row in rows:
+            (login) = (row) # tuple unpacking!
+            # do stuff with row data
+        if(not login or not login[0]):
+            print("Incorrect username and/or password")
+            return False
+        if (not login[1]):
+            print("Error: You are not an admin user")
+            return False
+        return True
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('Wrong password\n')
+            return False
+        
+def login():
+    username = input('Enter username: ')
+    password = input('Enter password: ')
+    return authenticate_user(username, password)
 # ----------------------------------------------------------------------
 # Command-Line Functionality
 # ----------------------------------------------------------------------
 def show_admin_options():
     """
-    Displays options specific for admins, such as adding new data <x>,
-    modifying <x> based on a given id, removing <x>, etc.
+    Displays options users can choose in the application, such as
+    viewing <x>, filtering results with a flag (e.g. -s to sort),
+    sending a request to do <x>, etc.
     """
     print('What would you like to do? ')
-    print('  (x) - something nifty for admins to do')
+    print('  (TODO: provide command-line options)')
+    print('  (x) - something nifty to do')
     print('  (x) - another nifty thing')
     print('  (x) - yet another nifty thing')
-    print('  (x) - more nifty things!')
+    print('  (g) - Get the Jeopardy! game season from the Jeopardy! game id')
     print('  (q) - quit')
     print()
     ans = input('Enter an option: ').lower()
     if ans == 'q':
         quit_ui()
-    elif ans == '':
-        pass
-
+    elif ans == 'g':
+        game_id = input('Enter game id: ')
+        season_from_gameid(game_id)
 
 def quit_ui():
     """
@@ -122,13 +154,12 @@ def quit_ui():
     print('Good bye!')
     exit()
 
-
 def main():
     """
     Main function for starting things up.
     """
-    show_admin_options()
-
+    if (login()):
+        show_admin_options()
 
 if __name__ == '__main__':
     # This conn is a global object that other functions can access.
