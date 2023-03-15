@@ -5,14 +5,14 @@ DELIMITER !
 CREATE FUNCTION game_to_season(game_id INT)
 RETURNS INTEGER DETERMINISTIC
 BEGIN
-DECLARE season INT;
+DECLARE local_season INT;
 
-SELECT season 
+SELECT season
     FROM games 
     WHERE games.game_id = game_id
-INTO season;
+INTO local_season;
 
-RETURN season;
+RETURN local_season;
 END !
 DELIMITER ;
 
@@ -45,9 +45,9 @@ BEGIN
                 ELSE -1 * j.wager
             END) AS total_score
     INTO total_pts
-    FROM responses_named j
-    INNER JOIN contestants c ON j.chooser = CONCAT(c.first_name, ' ', c.last_name)
-    INNER JOIN games g ON j.game_id = g.game_id
+    FROM responses AS j
+    INNER JOIN contestants AS c ON j.chooser = CONCAT(c.first_name, ' ', c.last_name)
+    INNER JOIN games AS g ON j.game_id = g.game_id
     WHERE c.player_id IS NOT NULL AND j.chooser = player_name;
 
     RETURN total_pts;
