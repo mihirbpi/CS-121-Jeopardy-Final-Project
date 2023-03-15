@@ -78,8 +78,8 @@ def season_from_gameid(game_id):
             sys.stderr(err)
             sys.exit(1)
         else:
-            # TODO: Please actually replace this :) 
-            sys.stderr('An error occurred, give something useful for clients...')
+            # TODO: Please actually replace this :)
+            sys.stderr('Make sure you enter a valid integer game_id')
 
 
 # ----------------------------------------------------------------------
