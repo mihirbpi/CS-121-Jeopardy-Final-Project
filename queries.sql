@@ -95,6 +95,26 @@ SELECT round, AVG(score) as avg_score
     GROUP BY round
     ORDER BY round;
 
+-- WITH cp AS (SELECT * FROM positions NATURAL LEFT JOIN contestants),
+--      num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant,
+--                           COUNT(DISTINCT game_id) AS num
+--                    FROM cp
+--                    GROUP BY cp.first_name, cp.last_name)
+-- SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
+--        j.round as round,
+--        SUM(CASE
+--                WHEN j.correct_respondent = j.chooser AND wager IS NULL THEN j.question_value AND j.round = round
+--                WHEN j.correct_respondent = j.chooser AND wager IS NOT NULL THEN j.wager AND j.round = round
+--                WHEN j.correct_respondent <> j.chooser AND wager IS NULL THEN -1 * j.question_value AND j.round = round
+--                ELSE -1 * j.wager
+--            END) / ng.num AS avg_score
+-- FROM responses_named j
+-- INNER JOIN contestants c ON j.chooser = CONCAT(c.first_name, ' ', c.last_name)
+-- INNER JOIN num_games ng ON j.chooser = ng.contestant
+-- LEFT JOIN cp ON c.player_id = cp.player_id
+-- WHERE ng.contestant = "Dru Daigle"
+-- GROUP BY j.chooser, c.first_name, c.last_name, ng.num;
+
 -- WITH winners as (
 --     SELECT s1.*
 --     FROM (SELECT game_id, player_id, SUM(question_value) as total_score

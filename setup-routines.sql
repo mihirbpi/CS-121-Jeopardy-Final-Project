@@ -25,7 +25,19 @@ CREATE FUNCTION player_winnings(player_name VARCHAR(100))
 RETURNS INTEGER DETERMINISTIC
 BEGIN
     DECLARE total_pts INTEGER;
-    
+
+    CREATE TABLE responses_named AS (SELECT *  FROM (games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping));
+
+    UPDATE responses_named
+    INNER JOIN positions ON responses_named.chooser = positions.seat_location AND responses_named.game_id = positions.game_id
+    INNER JOIN contestants ON positions.player_id = contestants.player_id
+    SET responses_named.chooser = CONCAT(contestants.first_name, ' ', contestants.last_name);
+
+    UPDATE responses_named
+    INNER JOIN positions ON responses_named.correct_respondent = positions.seat_location AND responses_named.game_id = positions.game_id
+    INNER JOIN contestants ON positions.player_id = contestants.player_id
+    SET responses_named.correct_respondent = CONCAT(contestants.first_name, ' ', contestants.last_name);
+
     SELECT SUM(CASE
                 WHEN j.correct_respondent = j.chooser AND wager IS NULL THEN j.question_value
                 WHEN j.correct_respondent = j.chooser AND wager IS NOT NULL THEN j.wager
