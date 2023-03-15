@@ -62,15 +62,6 @@ GROUP BY j.chooser, c.first_name, c.last_name, ng.num;
 
 
 -- What is the average amount of money won per season?
-SELECT season, AVG(score) as avg_score
-    FROM (SELECT first_name, last_name, season, SUM(question_value) as score
-        FROM games NATURAL LEFT JOIN positions NATURAL LEFT JOIN contestants
-            NATURAL LEFT JOIN value_mapping NATURAL LEFT JOIN responses
-        GROUP BY first_name, last_name, season
-        ORDER BY score DESC) as scores
-    GROUP BY season
-    ORDER BY season; 
-
 WITH cp AS (SELECT * FROM positions NATURAL LEFT JOIN contestants NATURAL LEFT JOIN games),
      num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant, 
                           cp.season AS season,
@@ -78,7 +69,7 @@ WITH cp AS (SELECT * FROM positions NATURAL LEFT JOIN contestants NATURAL LEFT J
                    FROM cp
                    GROUP BY cp.first_name, cp.last_name)
 SELECT season, AVG(avg_score) as season_avg_score
-    FROM SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant, cp.season as season,
+    FROM SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant, ng.season as season,
         SUM(CASE
                 WHEN j.correct_respondent = j.chooser AND wager IS NULL THEN j.question_value
                 WHEN j.correct_respondent = j.chooser AND wager IS NOT NULL THEN j.wager
