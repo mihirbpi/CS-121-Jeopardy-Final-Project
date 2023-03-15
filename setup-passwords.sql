@@ -2,6 +2,7 @@
 
 -- (Provided) This function generates a specified number of characters for using as a
 -- salt in passwords.
+SET GLOBAL log_bin_trust_function_creators = 1;
 DROP FUNCTION IF EXISTS make_salt;
 
 DELIMITER !

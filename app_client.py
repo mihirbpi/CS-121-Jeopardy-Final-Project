@@ -17,7 +17,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = False
+DEBUG = True
 
 
 # ----------------------------------------------------------------------
@@ -71,7 +71,7 @@ def season_from_gameid(game_id):
         for row in rows:
             (result) = (row) # tuple unpacking!
             # do stuff with row data
-            print("Season: " + str(result[0]))
+        print("Season: " + str(result[0]))
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
@@ -89,8 +89,35 @@ def season_from_gameid(game_id):
 # choose how to implement these depending on whether you have app.py or
 # app-client.py vs. app-admin.py (in which case you don't need to
 # support any prompt functionality to conditionally login to the sql database)
-
-
+def authenticate_user(username, password):
+    cursor = conn.cursor()
+    # Remember to pass arguments as a tuple like so to prevent SQL
+    # injection.
+    sql = 'SELECT authenticate(\'%s\', \'%s\');' % (username, password)
+    try:
+        cursor.execute(sql)
+        # row = cursor.fetchone()
+        rows = cursor.fetchall()
+        for row in rows:
+            (login) = (row) # tuple unpacking!
+            # do stuff with row data
+            if(not login[0]):
+                print("Incorrect username and/or password")
+                return False
+            return True
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('Wrong password\n')
+            return False
+        
+def login():
+    username = input('Enter username: ')
+    password = input('Enter password: ')
+    return authenticate_user(username, password)
 # ----------------------------------------------------------------------
 # Command-Line Functionality
 # ----------------------------------------------------------------------
@@ -122,12 +149,12 @@ def quit_ui():
     print('Good bye!')
     exit()
 
-
 def main():
     """
     Main function for starting things up.
     """
-    show_client_options()
+    if (login()):
+        show_client_options()
 
 
 if __name__ == '__main__':
