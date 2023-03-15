@@ -1,29 +1,14 @@
 """
-TODO: Student name(s):
-TODO: Student email(s):
+Student name(s): Mihir Borkar, Rupa Kurinchi Vendhan
+Student email(s): mborkar@caltech.edu, rkurinch@caltech.edu
 TODO: High-level program overview
-
-******************************************************************************
-This is a template you may start with for your Final Project application.
-You may choose to modify it, or you may start with the example function
-stubs (most of which are incomplete).
-
-Some sections are provided as recommended program breakdowns, but are optional
-to keep, and you will probably want to extend them based on your application's
-features.
-
 TODO:
-- Make a copy of app-template.py to a more appropriately named file. You can
-  either use app.py or separate a client vs. admin interface with app_client.py,
-  app_admin.py (you can factor out shared code in a third file, which is
-  recommended based on submissions in 22wi).
 - For full credit, remove any irrelevant comments, which are included in the
   template to help you get started. Replace this program overview with a
   brief overview of your application as well (including your name/partners name).
   This includes replacing everything in this *** section!
 ******************************************************************************
 """
-# TODO: Make sure you have these installed with pip3 if needed
 import sys  # to print error messages to sys.stderr
 import mysql.connector
 # To get error codes from the connector, useful for user-friendly
@@ -46,12 +31,12 @@ def get_conn():
     try:
         conn = mysql.connector.connect(
           host='localhost',
-          user='appadmin',
+          user='jeopardyadmin',
           # Find port in MAMP or MySQL Workbench GUI or with
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
           password='adminpw',
-          database='shelterdb' # replace this with your database name
+          database='jeopardydb' # replace this with your database name
         )
         print('Successfully connected.')
         return conn
@@ -111,32 +96,6 @@ def example_query():
 # ----------------------------------------------------------------------
 # Command-Line Functionality
 # ----------------------------------------------------------------------
-# TODO: Please change these!
-def show_options():
-    """
-    Displays options users can choose in the application, such as
-    viewing <x>, filtering results with a flag (e.g. -s to sort),
-    sending a request to do <x>, etc.
-    """
-    print('What would you like to do? ')
-    print('  (TODO: provide command-line options)')
-    print('  (x) - something nifty to do')
-    print('  (x) - another nifty thing')
-    print('  (x) - yet another nifty thing')
-    print('  (x) - more nifty things!')
-    print('  (q) - quit')
-    print()
-    ans = input('Enter an option: ').lower()
-    if ans == 'q':
-        quit_ui()
-    elif ans == '':
-        pass
-
-
-# Another example of where we allow you to choose to support admin vs. 
-# client features  in the same program, or
-# separate the two as different app_client.py and app_admin.py programs 
-# using the same database.
 def show_admin_options():
     """
     Displays options specific for admins, such as adding new data <x>,
@@ -168,7 +127,7 @@ def main():
     """
     Main function for starting things up.
     """
-    show_options()
+    show_admin_options()
 
 
 if __name__ == '__main__':
