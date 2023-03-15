@@ -17,7 +17,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = True
+DEBUG = False
 
 
 # ----------------------------------------------------------------------
@@ -69,17 +69,16 @@ def season_from_gameid(game_id):
         # row = cursor.fetchone()
         rows = cursor.fetchall()
         for row in rows:
-            (col1val) = (row) # tuple unpacking!
+            (result) = (row) # tuple unpacking!
             # do stuff with row data
-            print("season " + str(col1val[0]))
+            print("Season: " + str(result[0]))
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr(err)
+            sys.stderr.write(err)
             sys.exit(1)
         else:
-            # TODO: Please actually replace this :)
-            sys.stderr('Make sure you enter a valid integer game_id')
+            sys.stderr.write('Please make sure you enter a valid integer Jeopardy! game_id\n')
 
 
 # ----------------------------------------------------------------------
@@ -106,7 +105,7 @@ def show_client_options():
     print('  (x) - something nifty to do')
     print('  (x) - another nifty thing')
     print('  (x) - yet another nifty thing')
-    print('  (g) - game id to season')
+    print('  (g) - Get the Jeopardy! game season from the Jeopardy! game id')
     print('  (q) - quit')
     print()
     ans = input('Enter an option: ').lower()
