@@ -2,8 +2,8 @@
 -- Which players won the most money through Jeopardy?
 SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
     SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-    FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
-    INNER JOIN positions p ON j.correct_respondent = particular.seat_location AND j.chooser = p.seat_locations AND j.game_id = p.game_id
+    FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
+    INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
     INNER JOIN contestants c ON p.player_id = c.player_id
     GROUP BY j.chooser, c.first_name, c.last_name
     ORDER BY total_score DESC
@@ -12,7 +12,7 @@ SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
 -- Which players won the most money in season 16?
 SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
     SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-    FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
+    FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
     INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
     INNER JOIN contestants c ON p.player_id = c.player_id
     INNER JOIN games g ON j.game_id = g.game_id
