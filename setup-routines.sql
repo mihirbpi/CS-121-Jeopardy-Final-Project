@@ -77,8 +77,7 @@ BEGIN
         INNER JOIN contestants AS c ON p.player_id = c.player_id
         INNER JOIN games AS g ON j.game_id = g.game_id
         WHERE g.season = season
-        GROUP BY c.first_name, c.last_name
-        ORDER BY total_score DESC
+        GROUP BY g.season
     INTO total_pts;
     RETURN total_pts;
 END !
