@@ -59,34 +59,40 @@ END !
 DELIMITER ;
 
 -- Procedure to add a new contestant to the database. This procedure is intended 
--- for the admin. 
+-- for the admin.
+DROP PROCEDURE IF EXISTS sp_add_contestant;
+
+DELIMITER !
 CREATE PROCEDURE sp_add_contestant(
     -- player ID
     player_id       INT,
     -- first name of the contestant
-    first_name      VARCHAR(50) NOT NULL,
+    first_name      VARCHAR(50),
     -- last name of the contestant
-    last_name       VARCHAR(50) NOT NULL,
+    last_name       VARCHAR(50),
     -- hometown city of the contestant
     hometown_city   VARCHAR(100),
     -- hometown state of the contestant
     hometown_state  VARCHAR(100),
     -- occupation of the contestant
-    occupation      VARCHAR(200),
+    occupation      VARCHAR(200)
 )
 proc_label: BEGIN
-	IF player_id IN (SELECT player_id FROM contestants) THEN
-		LEAVE proc_label;
-	ELSE
-		INSERT INTO contestants (player_id, first_name, last_name, hometown_city, hometown_state, occupation)
+    IF EXISTS (SELECT player_id FROM contestants WHERE player_id = player_id) THEN
+        LEAVE proc_label;
+    ELSE
+        INSERT INTO contestants (player_id, first_name, last_name, hometown_city, hometown_state, occupation)
         VALUES (player_id, first_name, last_name, hometown_city, hometown_state, occupation);
     END IF;
-    
 END !
 DELIMITER ;
 
+
 -- Procedure to add a new game to the database. This procedure is intended for
 -- the admin. 
+DROP PROCEDURE IF EXISTS sp_add_game;
+
+DELIMITER !
 CREATE PROCEDURE sp_add_game(
     -- game ID
     game_id         INT,
@@ -97,9 +103,9 @@ CREATE PROCEDURE sp_add_game(
     -- player ID
     player_id1      INT,
     -- first name of the contestant
-    first_name1     VARCHAR(50) NOT NULL,
+    first_name1     VARCHAR(50),
     -- last name of the contestant
-    last_name1      VARCHAR(50) NOT NULL,
+    last_name1      VARCHAR(50),
     -- hometown city of the contestant
     hometown_city1  VARCHAR(100),
     -- hometown state of the contestant
@@ -109,9 +115,9 @@ CREATE PROCEDURE sp_add_game(
     -- player ID
     player_id2      INT,
     -- first name of the contestant
-    first_name2     VARCHAR(50) NOT NULL,
+    first_name2     VARCHAR(50),
     -- last name of the contestant
-    last_name2      VARCHAR(50) NOT NULL,
+    last_name2      VARCHAR(50),
     -- hometown city of the contestant
     hometown_city2  VARCHAR(100),
     -- hometown state of the contestant
@@ -121,9 +127,9 @@ CREATE PROCEDURE sp_add_game(
     -- player ID
     player_id3      INT,
     -- first name of the contestant
-    first_name3     VARCHAR(50) NOT NULL,
+    first_name3     VARCHAR(50),
     -- last name of the contestant
-    last_name3      VARCHAR(50) NOT NULL,
+    last_name3      VARCHAR(50),
     -- hometown city of the contestant
     hometown_city3  VARCHAR(100),
     -- hometown state of the contestant
@@ -131,12 +137,15 @@ CREATE PROCEDURE sp_add_game(
     -- occupation of the contestant
     occupation3     VARCHAR(200)
 )
-BEGIN 
-    proc_label: BEGIN
-	IF player_id IN (SELECT player_id FROM contestants) THEN
+proc_label: BEGIN
+	IF game_id IN (SELECT game_id FROM games) THEN
 		LEAVE proc_label;
 	ELSE
-		INSERT INTO contestants (player_id, first_name, last_name, hometown_city, hometown_state, occupation)
-        VALUES (player_id, first_name, last_name, hometown_city, hometown_state, occupation);
+		INSERT INTO games (game_id, season, game_year)
+        VALUES (game_id, season, game_year);
+        CALL sp_add_contestant(player_id1, first_name1, last_name1, hometown_city1, hometown_state1, occupation1);
+        CALL sp_add_contestant(player_id2, first_name2, last_name2, hometown_city2, hometown_state2, occupation2);
+        CALL sp_add_contestant(player_id3, first_name3, last_name3, hometown_city3, hometown_state3, occupation3);
     END IF;
 END !
+DELIMITER ;
