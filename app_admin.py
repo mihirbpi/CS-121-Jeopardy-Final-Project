@@ -236,7 +236,7 @@ def show_admin_options():
     """
     print()
     print('What would you like to do? ')
-    print('  (c) - Add a new contestant?')
+    print('  (c) - Add a new contestant to the database?')
     print('  (s) - Get total Jeopardy! winnings over a season?')
     print('  (t) - Get total Jeopardy! winnings of a player?')
     print('  (a) - Get average Jeopardy! winnings of a player?')
