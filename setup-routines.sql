@@ -36,11 +36,11 @@ END !
 DELIMITER ;
 
 -- Returns the total earnings of a given player over the course of
--- all games they playe between Seasons 16 and 33.
-DROP FUNCTION IF EXISTS player_winnings;
+-- all games they played between Seasons 16 and 33.
+DROP FUNCTION IF EXISTS total_player_winnings;
 
 DELIMITER !
-CREATE FUNCTION player_winnings(player_name VARCHAR(100)) 
+CREATE FUNCTION total_player_winnings(player_name VARCHAR(100)) 
 RETURNS INTEGER DETERMINISTIC
 BEGIN
     DECLARE total_pts INTEGER;
@@ -57,6 +57,62 @@ BEGIN
     RETURN total_pts;
 END !
 DELIMITER ;
+
+
+-- Returns the total earnings of all players within a season, between 16 and 33.
+DROP FUNCTION IF EXISTS total_season_winnings;
+
+DELIMITER !
+CREATE FUNCTION total_season_winnings(season INT) 
+RETURNS INTEGER DETERMINISTIC
+BEGIN
+    DECLARE total_pts INTEGER;
+
+    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
+    INTO total_pts
+        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
+        INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
+        INNER JOIN contestants c ON p.player_id = c.player_id
+        INNER JOIN games g ON j.game_id = g.game_id
+        WHERE g.season = season
+        GROUP BY j.chooser, c.first_name, c.last_name
+        ORDER BY total_score DESC;
+
+    RETURN total_pts;
+END !
+DELIMITER ;
+
+-- Returns the total earnings of a given player over the course of
+-- all games they played between Seasons 16 and 33.
+DROP FUNCTION IF EXISTS avg_player_winnings;
+
+DELIMITER !
+CREATE FUNCTION avg_player_winnings(player_name VARCHAR(100)) 
+RETURNS INTEGER DETERMINISTIC
+BEGIN
+    DECLARE avg_pts INTEGER;
+
+    WITH cp AS (SELECT * FROM positions NATURAL LEFT JOIN contestants),
+        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant,
+                            COUNT(DISTINCT game_id) AS num
+                    FROM cp
+                    GROUP BY cp.first_name, cp.last_name)
+    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) / ng.num as avg_score
+    INTO avg_pts
+        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
+        INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
+        INNER JOIN contestants c ON p.player_id = c.player_id
+        INNER JOIN num_games ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
+        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
+        GROUP BY j.chooser, c.first_name, c.last_name, ng.num
+        ORDER BY avg_score DESC;
+
+    RETURN avg_pts;
+END !
+DELIMITER ;
+
+
+-- PROCEDURES
 
 -- Procedure to add a new contestant to the database. This procedure is intended 
 -- for the admin.
@@ -146,6 +202,95 @@ proc_label: BEGIN
         CALL sp_add_contestant(player_id1, first_name1, last_name1, hometown_city1, hometown_state1, occupation1);
         CALL sp_add_contestant(player_id2, first_name2, last_name2, hometown_city2, hometown_state2, occupation2);
         CALL sp_add_contestant(player_id3, first_name3, last_name3, hometown_city3, hometown_state3, occupation3);
+    END IF;
+END !
+DELIMITER ;
+
+-- Procedure to add a new contestant position to the database. This procedure is 
+-- intended for the admin.
+DROP PROCEDURE IF EXISTS sp_add_position;
+
+DELIMITER !
+CREATE PROCEDURE sp_add_position(
+    -- game ID
+    game_id         INT,
+    -- player ID
+    player_id       INT,
+    -- where player is standing (right, middle, returning_champ)
+    seat_location   VARCHAR(20)
+)
+proc_label: BEGIN
+    IF EXISTS (SELECT game_id, player_id FROM positions WHERE game_id = game_id AND player_id = player_id) THEN
+        LEAVE proc_label;
+    ELSE
+        INSERT INTO positions (game_id, player_id, seat_location)
+        VALUES (game_id, player_id, seat_location);
+    END IF;
+END !
+DELIMITER ;
+
+-- Procedure to add a new question response to the database. This procedure is 
+-- intended for the admin.
+DROP PROCEDURE IF EXISTS sp_add_response;
+
+DELIMITER !
+CREATE PROCEDURE sp_add_response(
+    -- game ID, to be up to 4 characters
+    game_id             INT,
+    -- round number of the question (J, DJ, or final)
+    round               VARCHAR(5),
+    -- row index of question on the board
+    row_idx             TINYINT,
+    -- column index of question on the board
+    column_idx          TINYINT,
+    -- position of the contestant who answered the question, 
+    correct_respondent  VARCHAR(100),
+    -- position of the contestant who chose the question
+    chooser             VARCHAR(100),
+    -- amount contestant wagered on the question
+    wager               VARCHAR(7)
+)
+proc_label: BEGIN
+    IF EXISTS (SELECT game_id, round, row_idx, column_idx FROM responses 
+        WHERE game_id = game_id AND round = round AND row_idx = row_idx AND
+        column_idx = column_idx) THEN
+        LEAVE proc_label;
+    ELSE
+        INSERT INTO responses (game_id, round, row_idx, column_idx, correct_respondent, chooser, wager)
+        VALUES (game_id, round, row_idx, column_idx, correct_respondent, chooser, wager);
+    END IF;
+END !
+DELIMITER ;
+
+-- Procedure to add a new question to the database. This procedure is 
+-- intended for the admin.
+DROP PROCEDURE IF EXISTS sp_add_question;
+
+DELIMITER !
+CREATE PROCEDURE sp_add_question(
+    -- game ID, to be exactly 4 characters
+    game_id             INT,
+    -- round of the question
+    round               VARCHAR(5),
+    -- row index of question on the board
+    row_idx             TINYINT,
+    -- column index of question on the board
+    column_idx          TINYINT,
+    -- category of the question
+    category            VARCHAR(254),
+    -- the question itself
+    question_text       TEXT,
+    -- the answer to the question
+    answer              TEXT
+)
+proc_label: BEGIN
+    IF EXISTS (SELECT game_id, round, row_idx, column_idx FROM questions 
+        WHERE game_id = game_id AND round = round AND row_idx = row_idx AND
+        column_idx = column_idx) THEN
+        LEAVE proc_label;
+    ELSE
+        INSERT INTO questions (game_id, round, row_idx, column_idx, category, question_text, answer)
+        VALUES (game_id, round, row_idx, column_idx, category, question_text, answer);
     END IF;
 END !
 DELIMITER ;
