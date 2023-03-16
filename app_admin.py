@@ -272,7 +272,7 @@ def show_admin_options():
         print('''This option allows you to add a new contestant to the 
         database''')
         print('Enter an INTEGER player_id that does not already exist')
-        print('For example: 113011')
+        print('For example: 113011 or higher')
         player_id = input('Enter player_id: ')
         first_name = input('Enter first_name (capitalized): ')
         last_name = input('Enter last_name (capitalized): ')
