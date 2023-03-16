@@ -44,13 +44,19 @@ CREATE FUNCTION total_player_winnings(player_name VARCHAR(100))
 RETURNS INTEGER DETERMINISTIC
 BEGIN
     DECLARE total_pts INTEGER;
+
+    WITH cp AS (SELECT * FROM positions NATURAL LEFT JOIN contestants),
+        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant,
+                            COUNT(DISTINCT game_id) AS num
+                    FROM cp
+                    GROUP BY cp.first_name, cp.last_name)
     SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
         FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants AS c ON p.player_id = c.player_id
-        WHERE c.player_id IS NOT NULL AND j.chooser = player_name
-        GROUP BY j.chooser, c.first_name, c.last_name
-        ORDER BY total_score DESC
+        INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
+        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
+        GROUP BY j.chooser, c.first_name, c.last_name, ng.num
     INTO total_pts;
     RETURN total_pts;
 END !
