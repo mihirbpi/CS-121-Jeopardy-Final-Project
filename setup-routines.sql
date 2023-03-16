@@ -44,16 +44,14 @@ CREATE FUNCTION total_player_winnings(player_name VARCHAR(100))
 RETURNS INTEGER DETERMINISTIC
 BEGIN
     DECLARE total_pts INTEGER;
-
     SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-    INTO total_pts
-        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
-        INNER JOIN positions p ON j.correct_respondent = particular.seat_location AND j.chooser = p.seat_locations AND j.game_id = p.game_id
-        INNER JOIN contestants c ON p.player_id = c.player_id
+        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
+        INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
+        INNER JOIN contestants AS c ON p.player_id = c.player_id
         WHERE c.player_id IS NOT NULL AND j.chooser = player_name
         GROUP BY j.chooser, c.first_name, c.last_name
-        ORDER BY total_score DESC;
-
+        ORDER BY total_score DESC
+    INTO total_pts;
     RETURN total_pts;
 END !
 DELIMITER ;
@@ -69,15 +67,14 @@ BEGIN
     DECLARE total_pts INTEGER;
 
     SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-    INTO total_pts
         FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants c ON p.player_id = c.player_id
         INNER JOIN games g ON j.game_id = g.game_id
         WHERE g.season = season
         GROUP BY j.chooser, c.first_name, c.last_name
-        ORDER BY total_score DESC;
-
+        ORDER BY total_score DESC
+    INTO total_pts;
     RETURN total_pts;
 END !
 DELIMITER ;
@@ -98,15 +95,13 @@ BEGIN
                     FROM cp
                     GROUP BY cp.first_name, cp.last_name)
     SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) / ng.num as avg_score
-    INTO avg_pts
-        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
+        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
-        INNER JOIN contestants c ON p.player_id = c.player_id
-        INNER JOIN num_games ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
+        INNER JOIN contestants AS c ON p.player_id = c.player_id
+        INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
         WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
         GROUP BY j.chooser, c.first_name, c.last_name, ng.num
-        ORDER BY avg_score DESC;
-
+    INTO avg_pts;
     RETURN avg_pts;
 END !
 DELIMITER ;
