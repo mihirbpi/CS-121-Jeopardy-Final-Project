@@ -5,4 +5,5 @@ CREATE USER 'jeopardyclient'@'localhost' IDENTIFIED BY 'clientpw';
 GRANT ALL PRIVILEGES ON jeopardydb.* TO 'jeopardyadmin'@'localhost';
 GRANT SELECT ON jeopardydb.* TO 'jeopardyclient'@'localhost';
 GRANT EXECUTE ON FUNCTION jeopardydb.game_to_season TO 'jeopardyclient'@'localhost';
+GRANT EXECUTE ON FUNCTION jeopardydb.authenticate TO 'jeopardyclient'@'localhost';
 FLUSH PRIVILEGES;
