@@ -4,7 +4,7 @@ Student email(s): mborkar@caltech.edu, rkurinch@caltech.edu
 
 High-level program overview:
 This program handles the client Python application of our Jeopardy! project.
-This application allows a clien to log in and use the Jeopardy! application to get Jeopardy! stats.
+This application allows a client to log in and use the Jeopardy! application to get Jeopardy! stats.
 ******************************************************************************
 """
 import sys  # to print error messages to sys.stderr
@@ -15,7 +15,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = True
+DEBUG = False
 
 
 # ----------------------------------------------------------------------
@@ -84,7 +84,7 @@ def avg_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name)\n')
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
 
 def total_player_winnings(player_name):
     """"
@@ -113,7 +113,7 @@ def total_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name)\n')
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
 
 def total_season_winnings(season_number):
     """"
@@ -142,7 +142,7 @@ def total_season_winnings(season_number):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33)\n')
+            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n')
 
 # ----------------------------------------------------------------------
 # Functions for Logging Users In
@@ -197,6 +197,7 @@ def show_client_options():
     """
     Displays options client users can choose in the application.
     """
+    print()
     print('What would you like to do? ')
     print('  (TODO: provide command-line options)')
     print('  (s) - Get total Jeopardy! winnings over a season?')
