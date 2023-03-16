@@ -15,7 +15,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = False
+DEBUG = True
 
 
 # ----------------------------------------------------------------------
@@ -57,15 +57,15 @@ def get_conn():
 # ----------------------------------------------------------------------
 # Functions for Command-Line Options/Query Execution
 # ----------------------------------------------------------------------
-def season_from_gameid(game_id):
+def avg_player_winnings(player_name):
     """"
-    Gets the Jeopardy! game season from a Jeopardy! game id.
+    Gets the average winnings of a player from seasons 16-33 of Jeopardy.
     Prints out relevant error messages if there's any issues.
     """
     cursor = conn.cursor()
     # Remember to pass arguments as a tuple like so to prevent SQL
     # injection.
-    sql = 'SELECT game_to_season(\'%s\') AS s;' % (game_id)
+    sql = 'SELECT avg_player_winnings(\'%s\');' % (player_name)
     try:
         cursor.execute(sql)
         # row = cursor.fetchone()
@@ -74,18 +74,75 @@ def season_from_gameid(game_id):
         for row in rows:
             (result) = (row) # tuple unpacking!
             # do stuff with row data
-        if (not result[0]):
-            print("That game id does not have a season associated with it\n")
+        if (not result or not result[0]):
+            print("That player does not have any winnings associated with them\n")
         else:
-            print("Season: " + str(result[0]) + "\n")
+            print("Avg winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! game_id\n')
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name)\n')
 
+def total_player_winnings(player_name):
+    """"
+    Gets the total winnings of a player from seasons 16-33 of Jeopardy.
+    Prints out relevant error messages if there's any issues.
+    """
+    cursor = conn.cursor()
+    # Remember to pass arguments as a tuple like so to prevent SQL
+    # injection.
+    sql = 'SELECT total_player_winnings(\'%s\');' % (player_name)
+    try:
+        cursor.execute(sql)
+        # row = cursor.fetchone()
+        rows = cursor.fetchall()
+        result = None
+        for row in rows:
+            (result) = (row) # tuple unpacking!
+            # do stuff with row data
+        if (not result or not result[0]):
+            print("That player does not have any winnings associated with them\n")
+        else:
+            print("Total winnings: " + str(result[0]) + "\n")
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name)\n')
+
+def total_season_winnings(season_number):
+    """"
+    Gets the total winnings from Jeopardy! game season (16-33)
+    Prints out relevant error messages if there's any issues.
+    """
+    cursor = conn.cursor()
+    # Remember to pass arguments as a tuple like so to prevent SQL
+    # injection.
+    sql = 'SELECT total_season_winnings(\'%s\');' % (season_number)
+    try:
+        cursor.execute(sql)
+        # row = cursor.fetchone()
+        rows = cursor.fetchall()
+        result = None
+        for row in rows:
+            (result) = (row) # tuple unpacking!
+            # do stuff with row data
+        if (not result or not result[0]):
+            print("That season does not have any winnings associated with it\n")
+        else:
+            print("Total season winnings: " + str(result[0]) + "\n")
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33)\n')
 
 # ----------------------------------------------------------------------
 # Functions for Logging Users In
@@ -142,18 +199,31 @@ def show_client_options():
     """
     print('What would you like to do? ')
     print('  (TODO: provide command-line options)')
-    print('  (x) - something nifty to do')
-    print('  (x) - another nifty thing')
-    print('  (x) - yet another nifty thing')
-    print('  (g) - Get the Jeopardy! game season from the Jeopardy! game id?')
+    print('  (s) - Get total Jeopardy! winnings over a season?')
+    print('  (t) - Get total Jeopardy! winnings of a player?')
+    print('  (a) - Get average Jeopardy! winnings of a player?')
     print('  (q) - Quit?')
     print()
     ans = input('Enter an option: ').lower()
     if ans == 'q':
         quit_ui()
-    elif ans == 'g':
-        game_id = input('Enter game id: ')
-        season_from_gameid(game_id)
+    elif ans == 'a':
+        print('This option returns the average Jeopardy! winnings of a player over seasons 16-33')
+        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
+        print('For example: Ken Jennings')
+        player_name = input('Enter player_name: ')
+        avg_player_winnings(player_name)
+    elif ans == 't':
+        print('This option returns the total Jeopardy! winnings of a player over seasons 16-33')
+        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
+        print('For example: Ken Jennings')
+        player_name = input('Enter player_name: ')
+        total_player_winnings(player_name)
+    elif ans == 's':
+        print('This option returns the total winnings over an an entire Jeopardy! season (only supports seasons 16-33)')
+        print('For example: 25')
+        season_number = input('Enter season number: ')
+        total_season_winnings(season_number)
 
 def quit_ui():
     """
