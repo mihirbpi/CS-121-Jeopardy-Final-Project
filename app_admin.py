@@ -16,7 +16,7 @@ import mysql.connector.errorcode as errorcode
 
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
-DEBUG = False
+DEBUG = True
 
 
 # ----------------------------------------------------------------------
@@ -30,11 +30,11 @@ def get_conn():
     try:
         conn = mysql.connector.connect(
           host='localhost',
-          user='jeopardyclient',
+          user='jeopardyadmin',
           # Find port in MAMP or MySQL Workbench GUI or with
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
-          password='clientpw',
+          password='adminpw',
           database='jeopardydb' # replace this with your database name
         )
         print('Successfully connected.\n')
@@ -155,6 +155,25 @@ def total_season_winnings(season_number):
             sys.exit(1)
         else:
             sys.stderr.write('''Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n''')
+
+def add_new_contestant(player_id, first_name, last_name, city, state, 
+                       occupation):
+    """"
+    Adds a new contestant to the database given their information
+    Prints out relevant error messages if there's any issues.
+    """
+    cursor = conn.cursor()
+    args = [int(player_id), first_name, last_name, city, state, occupation]
+    try:
+        result = cursor.callproc('sp_add_contestant', args)
+        conn.commit()
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('''Please make sure you enter a valid INTEGER player_id that does not already exist.\n''')
 # ----------------------------------------------------------------------
 # Functions for Logging Users In
 # ----------------------------------------------------------------------
@@ -217,7 +236,7 @@ def show_admin_options():
     """
     print()
     print('What would you like to do? ')
-    print('  (TODO: provide command-line options)')
+    print('  (c) - Add a new contestant?')
     print('  (s) - Get total Jeopardy! winnings over a season?')
     print('  (t) - Get total Jeopardy! winnings of a player?')
     print('  (a) - Get average Jeopardy! winnings of a player?')
@@ -249,6 +268,19 @@ def show_admin_options():
         print('For example: 25')
         season_number = input('Enter season number: ')
         total_season_winnings(season_number)
+    elif ans == 'c':
+        print('''This option allows you to add a new contestant to the 
+        database''')
+        print('Enter an INTEGER player_id that does not already exist')
+        print('For example: 113011')
+        player_id = input('Enter player_id: ')
+        first_name = input('Enter first_name (capitalized): ')
+        last_name = input('Enter last_name (capitalized): ')
+        city = input('Enter city of residence (capitalized): ')
+        state = input('Enter state of residence (e.g. CA): ')
+        occupation = input('Enter occupation (e.g. doctor): ')
+        add_new_contestant(player_id, first_name, last_name, city, state,
+                           occupation)
 
 def quit_ui():
     """
@@ -275,3 +307,4 @@ if __name__ == '__main__':
     # about to execute a query with cursor.execute(<sqlquery>)
     conn = get_conn()
     main()
+    conn.close()

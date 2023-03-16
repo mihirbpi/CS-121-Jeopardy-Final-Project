@@ -267,3 +267,4 @@ if __name__ == '__main__':
     # about to execute a query with cursor.execute(<sqlquery>)
     conn = get_conn()
     main()
+    conn.close()
