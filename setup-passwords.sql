@@ -48,7 +48,7 @@ CREATE TABLE user_info (
     password_hash BINARY(64) NOT NULL,
 
     -- Indicates whether the user is an administrator
-    is_admin TINYINT NOT NULL
+    is_admin TINYINT DEFAULT 0 NOT NULL
 );
 
 -- [Problem 1a]
