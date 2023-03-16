@@ -1,5 +1,5 @@
 
--- Which players won the most money through Jeopardy?
+-- What are the total earnings of the players through Jeopardy?
 SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
     SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
     FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
@@ -9,7 +9,7 @@ SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
     ORDER BY total_score DESC
     LIMIT 10;
 
--- Which players won the most money in season 16?
+-- What are the total earnings of the players in season 16?
 SELECT CONCAT(c.first_name, ' ', c.last_name) AS contestant,
     SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
     FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
@@ -56,17 +56,6 @@ FROM (
      ) AS t
 GROUP BY season
 ORDER BY season;
-
--- -- Which round is most indicative of the final outcome for a given player?
--- SELECT round, AVG(score) as avg_score
---     FROM (SELECT round, SUM(question_value) as score
---         FROM responses NATURAL LEFT JOIN positions
---         NATURAL LEFT JOIN value_mapping NATURAL LEFT JOIN contestants
---         WHERE first_name = "Dru" AND last_name = "Daigle"
---         GROUP BY round
---         ORDER BY round) as scores
---     GROUP BY round
---     ORDER BY round;
 
 -- Add a new contestant to the database.
 INSERT INTO contestants (player_id, first_name, last_name, hometown_city, hometown_state, occupation)
