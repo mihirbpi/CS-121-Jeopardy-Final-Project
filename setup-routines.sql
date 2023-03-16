@@ -54,9 +54,8 @@ BEGIN
         FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants AS c ON p.player_id = c.player_id
-        INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
         WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
-        GROUP BY j.chooser, c.first_name, c.last_name, ng.num
+        GROUP BY c.first_name, c.last_name
     INTO total_pts;
     RETURN total_pts;
 END !
@@ -73,12 +72,12 @@ BEGIN
     DECLARE total_pts INTEGER;
 
     SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) j
-        INNER JOIN positions p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
-        INNER JOIN contestants c ON p.player_id = c.player_id
-        INNER JOIN games g ON j.game_id = g.game_id
+        FROM (SELECT * FROM games NATURAL LEFT JOIN responses NATURAL LEFT JOIN value_mapping) AS j
+        INNER JOIN positions AS p ON j.correct_respondent = p.seat_location AND j.chooser = p.seat_location AND j.game_id = p.game_id
+        INNER JOIN contestants AS c ON p.player_id = c.player_id
+        INNER JOIN games AS g ON j.game_id = g.game_id
         WHERE g.season = season
-        GROUP BY j.chooser, c.first_name, c.last_name
+        GROUP BY c.first_name, c.last_name
         ORDER BY total_score DESC
     INTO total_pts;
     RETURN total_pts;
@@ -106,7 +105,7 @@ BEGIN
         INNER JOIN contestants AS c ON p.player_id = c.player_id
         INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
         WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
-        GROUP BY j.chooser, c.first_name, c.last_name, ng.num
+        GROUP BY c.first_name, c.last_name, ng.num
     INTO avg_pts;
     RETURN avg_pts;
 END !
