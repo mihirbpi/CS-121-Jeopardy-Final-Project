@@ -1,4 +1,4 @@
--- UDFs
+-- UDFS
 
 -- Returns the points earned for a specific question.
 DROP FUNCTION IF EXISTS question_points;
@@ -296,3 +296,5 @@ sp: BEGIN
     END IF;
 END !
 DELIMITER ;
+
+-- TRIGGER
