@@ -177,6 +177,9 @@ sp: BEGIN
 END !
 DELIMITER ;
 
+
+-- TABLES
+
 -- Table for tracking username and timestamp when
 -- a user updates the contestant table from
 -- the admin Python app
@@ -198,7 +201,8 @@ CREATE TABLE update_stats (
     PRIMARY KEY (username)
 );
 
--- Triggers
+
+-- TRIGGERS
 
 -- Trigger that increments the number of times
 -- an admin user has updated the contestants table in the
