@@ -203,7 +203,7 @@ CREATE TABLE IF NOT EXISTS update_stats (
 -- contestants table and the info about their update is inserted in the 
 -- contestant_changes table.
 DELIMITER !
-CREATE TRIGGER update_check AFTER INSERT ON contestant_changes
+CREATE TRIGGER IF NOT EXISTS update_check AFTER INSERT ON contestant_changes
     FOR EACH ROW
     BEGIN 
         IF EXISTS (SELECT username FROM update_stats WHERE username = NEW.username) THEN
