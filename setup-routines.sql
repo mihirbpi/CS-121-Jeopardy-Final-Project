@@ -180,7 +180,9 @@ DELIMITER ;
 -- Table for tracking username and timestamp when
 -- a user updates the contestant table from
 -- the admin Python app
-CREATE TABLE IF NOT EXISTS contestant_changes (
+DROP TABLE IF EXISTS contestant_changes;
+
+CREATE TABLE contestant_changes (
     username VARCHAR(20),
     update_time TIMESTAMP,
     PRIMARY KEY (username, update_time)
@@ -188,7 +190,9 @@ CREATE TABLE IF NOT EXISTS contestant_changes (
 
 -- Table for tracking how many updates
 -- to the contestants table each admin user has made
-CREATE TABLE IF NOT EXISTS update_stats (
+DROP TABLE IF EXISTS update_stats;
+
+CREATE TABLE update_stats (
     username VARCHAR(20),
     update_amount INT,
     PRIMARY KEY (username)
@@ -203,7 +207,7 @@ CREATE TABLE IF NOT EXISTS update_stats (
 -- contestants table and the info about their update is inserted in the 
 -- contestant_changes table.
 DELIMITER !
-CREATE TRIGGER IF NOT EXISTS update_check AFTER INSERT ON contestant_changes
+CREATE TRIGGER update_check AFTER INSERT ON contestant_changes
     FOR EACH ROW
     BEGIN 
         IF EXISTS (SELECT username FROM update_stats WHERE username = NEW.username) THEN
