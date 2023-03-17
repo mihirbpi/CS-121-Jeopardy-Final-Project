@@ -1,3 +1,6 @@
+DROP USER IF EXISTS 'jeopardyadmin'@'localhost';
+DROP USER IF EXISTS 'jeopardyclient'@'localhost';
+
 CREATE USER 'jeopardyadmin'@'localhost' IDENTIFIED BY 'adminpw';
 CREATE USER 'jeopardyclient'@'localhost' IDENTIFIED BY 'clientpw';
 
