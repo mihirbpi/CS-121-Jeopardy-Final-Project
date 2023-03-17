@@ -224,8 +224,8 @@ def show_client_options():
         print('''This option returns the average Jeopardy! winnings of a 
         player over seasons 16-33''')
         print('''Enter player_name as capitalized first_name, followed by a 
-        space, followed by capitalized last_name')
-        print('For example: Ken Jennings''')
+        space, followed by capitalized last_name''')
+        print('For example: Ken Jennings')
         player_name = input('Enter player_name: ')
         avg_player_winnings(player_name)
     elif ans == 't':
