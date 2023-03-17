@@ -47,7 +47,7 @@ CREATE TABLE user_info (
     -- definition for comparison/sorting than CHAR.
     password_hash BINARY(64) NOT NULL,
 
-    -- Indicates whether the user is an administrator
+    -- Indicates whether the user is an administrator, defaults to not admin.
     is_admin TINYINT DEFAULT 0 NOT NULL
 );
 
