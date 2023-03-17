@@ -4,7 +4,8 @@ Student email(s): mborkar@caltech.edu, rkurinch@caltech.edu
 
 High-level program overview:
 This program handles the admin Python application of our Jeopardy! project.
-This application allows an admin to log in and use the Jeopardy! application to get Jeopardy! stats or insert new contestant information into the database.
+This application allows an admin to log in and use the Jeopardy! application 
+to get Jeopardy! stats or insert new contestant information into the database.
 ******************************************************************************
 """
 import sys  # to print error messages to sys.stderr
@@ -29,11 +30,11 @@ def get_conn():
     try:
         conn = mysql.connector.connect(
           host='localhost',
-          user='jeopardyclient',
+          user='jeopardyadmin',
           # Find port in MAMP or MySQL Workbench GUI or with
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
-          password='clientpw',
+          password='adminpw',
           database='jeopardydb' # replace this with your database name
         )
         print('Successfully connected.\n')
@@ -44,14 +45,16 @@ def get_conn():
         # simulated program. Their user information would be in a users table
         # specific to your database; hence the DEBUG use.
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR and DEBUG:
-            sys.stderr('Incorrect username or password when connecting to DB.\n')
+            sys.stderr('''Incorrect username or password when connecting to 
+            DB.\n''')
         elif err.errno == errorcode.ER_BAD_DB_ERROR and DEBUG:
             sys.stderr('Database does not exist.\n')
         elif DEBUG:
             sys.stderr(err)
         else:
             # A fine catchall client-facing message.
-            sys.stderr('An error occurred, please contact the administrator.\n')
+            sys.stderr('''An error occurred, please contact the administrator.
+            \n''')
         sys.exit(1)
 
 # ----------------------------------------------------------------------
@@ -75,7 +78,8 @@ def avg_player_winnings(player_name):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print("That player does not have any winnings associated with them\n")
+            print('''That player does not have any winnings associated with 
+            them\n''')
         else:
             print("Avg winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -84,7 +88,10 @@ def avg_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
+            sys.stderr.write('''Please make sure you enter a valid Jeopardy! 
+            player name (capitalized first_name, followed by a space, 
+            followed by capitalized last_name) or contact the 
+            administrator\n''')
 
 def total_player_winnings(player_name):
     """"
@@ -104,7 +111,8 @@ def total_player_winnings(player_name):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print("That player does not have any winnings associated with them\n")
+            print('''That player does not have any winnings associated with 
+            them\n''')
         else:
             print("Total winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -113,7 +121,10 @@ def total_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
+            sys.stderr.write('''Please make sure you enter a valid Jeopardy! 
+            player name (capitalized first_name, followed by a space, 
+            followed by capitalized last_name) or contact the 
+            administrator\n''')
 
 def total_season_winnings(season_number):
     """"
@@ -133,7 +144,8 @@ def total_season_winnings(season_number):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print("That season does not have any winnings associated with it\n")
+            print('''That season does not have any winnings associated with 
+            it\n''')
         else:
             print("Total season winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -142,7 +154,26 @@ def total_season_winnings(season_number):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n')
+            sys.stderr.write('''Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n''')
+
+def add_new_contestant(player_id, first_name, last_name, city, state, 
+                       occupation):
+    """"
+    Adds a new contestant to the database given their information
+    Prints out relevant error messages if there's any issues.
+    """
+    cursor = conn.cursor()
+    args = [int(player_id), first_name, last_name, city, state, occupation]
+    try:
+        result = cursor.callproc('sp_add_contestant', args)
+        conn.commit()
+    except mysql.connector.Error as err:
+        # If you're testing, it's helpful to see more details printed.
+        if DEBUG:
+            sys.stderr.write(err)
+            sys.exit(1)
+        else:
+            sys.stderr.write('''Please make sure you enter a valid INTEGER player_id that does not already exist.\n''')
 # ----------------------------------------------------------------------
 # Functions for Logging Users In
 # ----------------------------------------------------------------------
@@ -154,12 +185,15 @@ def total_season_winnings(season_number):
 def authenticate_user(username, password):
     """"
     Authenticates a username and password when the user tries to login.
-    Prints out relevant errors if the username/password is wrong or if the username and password is right but the user does not have the right permissions.
+    Prints out relevant errors if the username/password is wrong or if the 
+    username and password is right but the user does not have the right 
+    permissions.
     """
     cursor = conn.cursor()
     # Remember to pass arguments as a tuple like so to prevent SQL
     # injection.
-    sql = 'SELECT authenticate(\'%s\', \'%s\') AS login, is_admin FROM user_info WHERE username=\'%s\';' % (username, password, username)
+    sql = '''SELECT authenticate(\'%s\', \'%s\') AS login, is_admin FROM 
+    user_info WHERE username=\'%s\';''' % (username, password, username)
     try:
         cursor.execute(sql)
         # row = cursor.fetchone()
@@ -181,7 +215,8 @@ def authenticate_user(username, password):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('An error occurred, please try again or contac an administrator.\n')
+            sys.stderr.write('''An error occurred, please try again or 
+            contact an administrator.\n''')
             return False
         
 def login():
@@ -201,7 +236,7 @@ def show_admin_options():
     """
     print()
     print('What would you like to do? ')
-    print('  (TODO: provide command-line options)')
+    print('  (c) - Add a new contestant to the database?')
     print('  (s) - Get total Jeopardy! winnings over a season?')
     print('  (t) - Get total Jeopardy! winnings of a player?')
     print('  (a) - Get average Jeopardy! winnings of a player?')
@@ -211,22 +246,41 @@ def show_admin_options():
     if ans == 'q':
         quit_ui()
     elif ans == 'a':
-        print('This option returns the average Jeopardy! winnings of a player over seasons 16-33')
-        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
+        print('''This option returns the average Jeopardy! winnings of a 
+        player over seasons 16-33''')
+        print('''Enter player_name as capitalized first_name, followed by a 
+        space, followed by capitalized last_name''')
         print('For example: Ken Jennings')
         player_name = input('Enter player_name: ')
         avg_player_winnings(player_name)
     elif ans == 't':
-        print('This option returns the total Jeopardy! winnings of a player over seasons 16-33')
-        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
-        print('For example: Ken Jennings')
+        print('''This option returns the total Jeopardy! winnings of a player 
+        over seasons 16-33''')
+        print('''Enter player_name as capitalized first_name, followed by a 
+        space, followed by capitalized last_name')
+        print('For example: Ken Jennings''')
         player_name = input('Enter player_name: ')
         total_player_winnings(player_name)
     elif ans == 's':
-        print('This option returns the total winnings over an an entire Jeopardy! season (only supports seasons 16-33)')
+        print('''This option returns the total winnings over an an entire 
+        Jeopardy! season (only supports seasons 16-33)''')
+        print('Enter a season number (an integer 16-33)')
         print('For example: 25')
         season_number = input('Enter season number: ')
         total_season_winnings(season_number)
+    elif ans == 'c':
+        print('''This option allows you to add a new contestant to the 
+        database''')
+        print('Enter an INTEGER player_id that does not already exist')
+        print('For example: 113011 or higher')
+        player_id = input('Enter player_id: ')
+        first_name = input('Enter first_name (capitalized): ')
+        last_name = input('Enter last_name (capitalized): ')
+        city = input('Enter city of residence (capitalized): ')
+        state = input('Enter state of residence (e.g. CA): ')
+        occupation = input('Enter occupation (e.g. doctor): ')
+        add_new_contestant(player_id, first_name, last_name, city, state,
+                           occupation)
 
 def quit_ui():
     """
@@ -239,7 +293,8 @@ def main():
     """
     Main function for starting things up.
     If the user logs in successfully they can choose an option.
-    Everytime a choice of option is selected and produces an output, the options are shown again and the process repeats until the user chooses the
+    Everytime a choice of option is selected and produces an output, the 
+    options are shown again and the process repeats until the user chooses the
     quit option.
     """
     if (login()):
@@ -252,3 +307,4 @@ if __name__ == '__main__':
     # about to execute a query with cursor.execute(<sqlquery>)
     conn = get_conn()
     main()
+    conn.close()
