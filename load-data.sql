@@ -1,9 +1,11 @@
 -- Instructions:
--- This script will load the CSV/TXT files into the tables you created in setup.sql.
+-- This script will load the CSV/TXT files into the tables you created in 
+-- setup.sql.
 -- Intended for use with the command-line MySQL, otherwise unnecessary for
 -- phpMyAdmin (just import each CSV/TXT file in the GUI).
 
--- Make sure this file is in the same directory as readme.md. Then run the following in the mysql> prompt (assuming
+-- Make sure this file is in the same directory as readme.md. Then run the 
+-- following in the mysql> prompt (assuming
 -- you have a jeopardydb created with CREATE DATABASE jeopardydb;):
 -- USE DATABASE jeopardydb; 
 -- source setup.sql; (make sure no warnings appear)

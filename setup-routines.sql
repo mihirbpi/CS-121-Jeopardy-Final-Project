@@ -4,7 +4,8 @@
 DROP FUNCTION IF EXISTS question_points;
 
 DELIMITER !
-CREATE FUNCTION question_points(chooser VARCHAR(100), correct_respondent VARCHAR(100), question_value INT, wager VARCHAR(7))
+CREATE FUNCTION question_points(chooser VARCHAR(100), correct_respondent 
+VARCHAR(100), question_value INT, wager VARCHAR(7))
 RETURNS INTEGER DETERMINISTIC
 BEGIN
 -- if the contestant who chose the question is the same as the contestant who
@@ -15,12 +16,12 @@ IF correct_respondent = chooser AND wager = '' THEN
 -- asked and question is a daily double, player wins wager amount
 ELSEIF correct_respondent = chooser THEN
     RETURN wager;
--- if the contestant who chose the question is not the same as the contestant who
--- asked and question is not a daily double, chooser loses question value
+-- if the contestant who chose the question is not the same as the contestant 
+-- who asked and question is not a daily double, chooser loses question value
 ELSEIF correct_respondent <> chooser AND wager = '' THEN
     RETURN -1 * question_value;
--- if the contestant who chose the question is not the same as the contestant who
--- asked and question is a daily double, chooser loses wager amount
+-- if the contestant who chose the question is not the same as the contestant 
+-- who asked and question is a daily double, chooser loses wager amount
 ELSE
     RETURN -1 * wager;
 END IF;
@@ -57,16 +58,20 @@ BEGIN
     DECLARE total_pts INTEGER;
 
     WITH cp AS (SELECT * FROM positions NATURAL JOIN contestants),
-        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant,
+        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS 
+        contestant,
                             COUNT(DISTINCT game_id) AS num
                     FROM cp
                     GROUP BY cp.first_name, cp.last_name)
-    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN value_mapping) AS j
+    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.
+    question_value, j.wager)) AS total_score
+        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN 
+        value_mapping) AS j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location 
                    AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants AS c ON p.player_id = c.player_id
-        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
+        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.
+        last_name) = player_name
         GROUP BY c.first_name, c.last_name
     INTO total_pts;
 
@@ -74,7 +79,8 @@ BEGIN
 END !
 DELIMITER ;
 
--- Returns the total earnings of all players within a season, between 16 and 33.
+-- Returns the total earnings of all players within a season, 
+-- between 16 and 33.
 -- See queries.sql for more information on the query itself.
 DROP FUNCTION IF EXISTS total_season_winnings;
 
@@ -84,8 +90,10 @@ RETURNS INTEGER DETERMINISTIC
 BEGIN
     DECLARE total_pts INTEGER;
 
-    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) AS total_score
-        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN value_mapping) AS j
+    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.
+    question_value, j.wager)) AS total_score
+        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN 
+        value_mapping) AS j
         INNER JOIN positions AS p ON j.correct_respondent = p.seat_location 
                    AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants AS c ON p.player_id = c.player_id
@@ -109,17 +117,22 @@ BEGIN
     DECLARE avg_pts INTEGER;
 
     WITH cp AS (SELECT * FROM positions NATURAL JOIN contestants),
-        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS contestant,
+        num_games AS (SELECT CONCAT(cp.first_name, ' ', cp.last_name) AS 
+        contestant,
                             COUNT(DISTINCT game_id) AS num
                     FROM cp
                     GROUP BY cp.first_name, cp.last_name)
-    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.question_value, j.wager)) / ng.num as avg_score
-        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN value_mapping) AS j
+    SELECT SUM(question_points(j.chooser, j.correct_respondent, j.
+    question_value, j.wager)) / ng.num as avg_score
+        FROM (SELECT * FROM games NATURAL JOIN responses NATURAL JOIN 
+        value_mapping) AS j
         INNER JOIN positions p ON j.correct_respondent = p.seat_location 
                    AND j.chooser = p.seat_location AND j.game_id = p.game_id
         INNER JOIN contestants AS c ON p.player_id = c.player_id
-        INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) = ng.contestant
-        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.last_name) = player_name
+        INNER JOIN num_games AS ng ON CONCAT(c.first_name, ' ', c.last_name) 
+        = ng.contestant
+        WHERE c.player_id IS NOT NULL AND CONCAT(c.first_name, ' ', c.
+        last_name) = player_name
         GROUP BY c.first_name, c.last_name, ng.num
     INTO avg_pts;
     RETURN avg_pts;
@@ -149,13 +162,16 @@ CREATE PROCEDURE sp_add_contestant(
     IN p_occupation         VARCHAR(200)
 )
 sp: BEGIN
-    IF EXISTS (SELECT player_id FROM contestants WHERE player_id = p_player_id) THEN
+    IF EXISTS (SELECT player_id FROM contestants WHERE player_id = 
+    p_player_id) THEN
         -- player already exists, exit procedure
         LEAVE sp;
     ELSE
         -- insert new player
-        INSERT INTO contestants (player_id, first_name, last_name, hometown_city, hometown_state, occupation)
-        VALUES (p_player_id, p_first_name, p_last_name, p_hometown_city, p_hometown_state, p_occupation);
+        INSERT INTO contestants (player_id, first_name, last_name, 
+        hometown_city, hometown_state, occupation)
+        VALUES (p_player_id, p_first_name, p_last_name, p_hometown_city, 
+        p_hometown_state, p_occupation);
     END IF;
 END !
 DELIMITER ;
@@ -214,8 +230,10 @@ DELIMITER !
 CREATE TRIGGER update_check AFTER INSERT ON contestant_changes
     FOR EACH ROW
     BEGIN 
-        IF EXISTS (SELECT username FROM update_stats WHERE username = NEW.username) THEN
-            UPDATE update_stats SET update_amount = update_amount + 1 WHERE username = NEW.username;
+        IF EXISTS (SELECT username FROM update_stats WHERE username = NEW.
+        username) THEN
+            UPDATE update_stats SET update_amount = update_amount + 1 WHERE 
+            username = NEW.username;
         ELSE
             INSERT INTO update_stats
             VALUES (NEW.username, 1);

@@ -1,7 +1,7 @@
  -- File for Password Management section of Final Project
 
--- (Provided) This function generates a specified number of characters for using as a
--- salt in passwords.
+-- (Provided) This function generates a specified number of characters for 
+-- using as a salt in passwords.
 DROP FUNCTION IF EXISTS make_salt;
 
 DELIMITER !
@@ -58,7 +58,8 @@ CREATE TABLE user_info (
 DROP PROCEDURE IF EXISTS sp_add_user;
 
 DELIMITER !
-CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20), is_admin TINYINT)
+CREATE PROCEDURE sp_add_user(new_username VARCHAR(20), password VARCHAR(20), 
+is_admin TINYINT)
 BEGIN
   DECLARE salt CHAR(8);
   DECLARE temp_pass VARCHAR(28);
@@ -74,8 +75,9 @@ DELIMITER ;
 
 -- [Problem 1b]
 -- Authenticates the specified username and password against the data
--- in the user_info table.  Returns 1 if the user appears in the table, and the
--- specified password hashes to the value for the user. Otherwise returns 0.
+-- in the user_info table.  Returns 1 if the user appears in the table, and 
+-- the specified password hashes to the value for the user. 
+-- Otherwise returns 0.
 DROP FUNCTION IF EXISTS authenticate;
 
 DELIMITER !
@@ -105,16 +107,17 @@ END !
 DELIMITER ;
 
 -- [Problem 1c]
--- Add at least two users into your user_info table so that when we run this file,
--- we will have examples users in the database.
+-- Add at least two users into your user_info table so that when we run this 
+-- file, we will have examples users in the database.
 CALL sp_add_user('Rupa', 'nopasswords', 0);
 CALL sp_add_user('Mihir', 'iloveCS', 1);
 CALL sp_add_user('Buford', 'sqlinjection', 1);
 
 
 -- [Problem 1d]
--- Optional: Create a procedure sp_change_password to generate a new salt and change the given
--- user's password to the given password (after salting and hashing)
+-- Optional: Create a procedure sp_change_password to generate a new salt and 
+-- change the given user's password to the given password
+-- (after salting and hashing)
 DROP PROCEDURE IF EXISTS sp_change_password;
 
 DELIMITER !
