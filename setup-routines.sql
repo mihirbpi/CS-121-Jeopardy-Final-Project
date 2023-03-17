@@ -64,7 +64,8 @@ BEGIN
 END !
 DELIMITER ;
 
--- Returns the total earnings of all players within a season, between 16 and 33.
+-- Returns the total earnings of all players within a season, 
+-- between 16 and 33.
 DROP FUNCTION IF EXISTS total_season_winnings;
 
 DELIMITER !
@@ -115,8 +116,8 @@ DELIMITER ;
 
 -- PROCEDURES
 
--- Procedure to add a new contestant to the database. This procedure is intended 
--- for the admin.
+-- Procedure to add a new contestant to the database. This procedure is
+-- intended for the admin.
 DROP PROCEDURE IF EXISTS sp_add_contestant;
 
 DELIMITER !
@@ -144,4 +145,59 @@ sp: BEGIN
         VALUES (p_player_id, p_first_name, p_last_name, p_hometown_city, p_hometown_state, p_occupation);
     END IF;
 END !
+DELIMITER ;
+
+-- Procedure to be called by the admin Python app
+-- when a user makes a change to the contestants table
+-- Inserts username and timestamp of change into the
+-- contestant_changes table
+DROP PROCEDURE IF EXISTS contestant_change;
+
+DELIMITER !
+CREATE PROCEDURE contestant_change(
+    -- username
+    IN username         VARCHAR(20)
+)
+sp: BEGIN
+    INSERT INTO contestant_changes
+    VALUES (username, NOW());
+END !
+DELIMITER ;
+
+-- Table for tracking username and timestamp when
+-- a user updates the contestant table from
+-- the admin Python app
+CREATE TABLE IF NOT EXISTS contestant_changes (
+    username VARCHAR(20),
+    update_time TIMESTAMP,
+    PRIMARY KEY (username, update_time)
+);
+
+-- Table for tracking how many updates
+-- to the contestants table each admin user has made
+CREATE TABLE IF NOT EXISTS update_stats (
+    username VARCHAR(20),
+    update_amount INT,
+    PRIMARY KEY (username)
+);
+
+-- Triggers
+
+-- Trigger that increments the number of times
+-- an admin user has updated the contestants table in the
+-- update_stats table.
+-- Is triggered once the admin user updates the
+-- contestants table and the info about their update is inserted in the 
+-- contestant_changes table.
+DELIMITER !
+CREATE TRIGGER update_check AFTER INSERT ON contestant_changes
+    FOR EACH ROW
+    BEGIN 
+        IF EXISTS (SELECT username FROM update_stats WHERE username = NEW.username) THEN
+            UPDATE update_stats SET update_amount = update_amount + 1 WHERE username = NEW.username;
+        ELSE
+            INSERT INTO update_stats
+            VALUES (NEW.username, 1);
+        END IF;
+    END !
 DELIMITER ;

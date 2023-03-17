@@ -17,6 +17,7 @@ import mysql.connector.errorcode as errorcode
 # Debugging flag to print errors when debugging that shouldn't be visible
 # to an actual client. ***Set to False when done testing.***
 DEBUG = False
+user = None
 
 
 # ----------------------------------------------------------------------
@@ -162,12 +163,16 @@ def add_new_contestant(player_id, first_name, last_name, city, state,
     Adds a new contestant to the database given their information
     Prints out relevant error messages if there's any issues.
     """
+    global user
     cursor = conn.cursor()
-    args = [int(player_id), first_name, last_name, city, state, occupation]
     try:
+        args = [int(player_id), first_name, last_name, city, state, 
+                occupation]
         result = cursor.callproc('sp_add_contestant', args)
         conn.commit()
-    except mysql.connector.Error as err:
+        result = cursor.callproc('contestant_change', [user])
+        conn.commit()
+    except ValueError or mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
             sys.stderr.write(err)
@@ -189,6 +194,7 @@ def authenticate_user(username, password):
     username and password is right but the user does not have the right 
     permissions.
     """
+    global user
     cursor = conn.cursor()
     # Remember to pass arguments as a tuple like so to prevent SQL
     # injection.
@@ -208,6 +214,7 @@ def authenticate_user(username, password):
         if (not login[1]):
             print("Error: You are not an admin user\n")
             return False
+        user = username
         return True
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.

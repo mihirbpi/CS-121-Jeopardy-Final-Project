@@ -109,6 +109,7 @@ DELIMITER ;
 -- we will have examples users in the database.
 CALL sp_add_user('Rupa', 'nopasswords', 0);
 CALL sp_add_user('Mihir', 'iloveCS', 1);
+CALL sp_add_user('Buford', 'sqlinjection', 1);
 
 
 -- [Problem 1d]
