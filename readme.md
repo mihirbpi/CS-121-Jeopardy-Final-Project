@@ -78,6 +78,8 @@ $ pip3 install mysql-connector-python
 $ pip3 install mysql-connector-python-rf
 ```
 
+If that does not work please contact one of the contributors.
+
 **Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of ```app_client.py``` plus some additional ones, so
 you may want to run ```app_admin.py``` first.
 
