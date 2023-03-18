@@ -29,7 +29,7 @@ Make sure you have MySQL downloaded and available through your
 device's command-line. Also make sure you are in the folder containing all the project's
 files.
 
-First, open mySQL on the command line and create the following database in mySQL:
+First, open MySQL on the command line and create the following database in mySQL:
 ```
 mysql> CREATE DATABASE jeopardydb;
 mysql> USE jeopardydb;
@@ -92,15 +92,15 @@ Buford    | sqlinjection | Admin
 
 **Here is a suggested guide to using ```app_admin.py```:**
     
-1. Login with the username Mihir and the corresponding password.
+1. Login with the username ```Mihir``` and the corresponding password.
     
-2. Select option (s), follow the instructions that are printed, and enter the season number 25 to get the total winnings over that season.
+2. Select option (s), follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
     
-3. Select option (t), follow the instructions that are printed, and enter the player name Ken Jennings to get Ken Jennings' total winnings.
+3. Select option (t), follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
     
-4. Select option (c), follow the instruction that are printed, and enter the information for a new contestant with the player_id 113011.
+4. Select option (c), follow the instruction that are printed, and enter the information for a new contestant with the player_id ```113011```.
     
-5. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id 113012.
+5. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113012```.
     
 6. Select option (q) to quit the application.
     
@@ -110,9 +110,9 @@ Buford    | sqlinjection | Admin
     
 9. Run ```$ python3 app_admin.py``` (without the "$") in the command line again to reopen the application.
     
-10. Login with the username Buford and the corresponding password.
+10. Login with the username ```Buford``` and the corresponding password.
     
-11. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id 113013.
+11. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113013```.
     
 12.  Select option (q) to quit the application.
     
@@ -128,16 +128,16 @@ Buford    | sqlinjection | Admin
     mysql> SELECT * FROM contestant_changes;
     mysql> SELECT * FROM update_stats;
     ```
-    You should see the timestamps of when the admin users Mihir and Buford updated the contestants,
+    You should see the timestamps of when the admin users ```Mihir``` and ```Buford``` updated the contestants,
     as well as how many times each user updated the contestants displayed on the screen in two tables.
     
         
 **Here is a suggested guide to using ```app_client.py```:**
-1. Login with the username Rupa and the corresponding password.
+1. Login with the username ```Rupa``` and the corresponding password.
     
-2. Select option (s), follow the instructions that are printed, and enter the season number 25 to get the total winnings over that season.
+2. Select option (s), follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
     
-3. Select option (t), follow the instructions that are printed, and enter the player name Ken Jennings to get Ken Jennings' total winnings.
+3. Select option (t), follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
     
 4. Select option (q) to quit the application.
 
