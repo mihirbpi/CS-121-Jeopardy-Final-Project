@@ -1,5 +1,8 @@
 Please download all the CSV/TXT files from the Google Drive folder at this link:
 https://drive.google.com/drive/folders/1aSHi9P4u2Po2uHQzX9cB34Pvbq-Y8Wgx?usp=sharing
-into the same folder as the other files from the CodePost submission. 
+into the same folder as the other files from the CodePost submission.
+If you download the entire folder, make sure to unzip it and move the files 
+from inside the resulting data folder to the same directory as the the other 
+files in the CodePost submission.
 Make sure these files are directly in the same folder as the other files in 
-the CodePost submission and not in a subdirectory called data. 
+the CodePost submission and not in a subdirectory called data.
