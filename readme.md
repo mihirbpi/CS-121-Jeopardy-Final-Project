@@ -1,4 +1,8 @@
 # readme
+
+**Contributors:** **Mihir Borkar** and **Rupa Kurinchi-Vendhan**
+
+**Introduction:**
 This is our final project for CS 121 Relational Databases at Caltech.
 
 Our project was working with a Jeopardy! database with information about 18 previous seasons.
@@ -11,11 +15,6 @@ It includes an application which allows clients to
 interact with this data through providing queries to get information on past Jeopardy!
 seasons/players and an application which allows admins to submit requests to update our database with new contestants. 
 Follow the instructions below to try it out for yourself. Thank you!
-
-
-
-**Contributors:** Mihir Borkar and Rupa Kurinchi-Vendhan
-
 
 
 **Data source:** 
@@ -75,19 +74,18 @@ you may want to run ```app_admin.py``` first.
 
 **The following are the usernames/passwords to use for the Python apps:**
 
+For ```app_admin.py```, the following admin/client users are registered:
+Username  | Password                 |  Permissions
+--------- | -------------------------| ------------------------
+```Mihir```     | ```iloveCS```      | Admin       
+```Buford```    | ```sqlinjection``` | Admin       
+
 For ```app_client.py```, the following admin/client users are registered:
-Username  | Password     | Permissions
---------- | ------------ | -----------
-Mihir     | iloveCS      | Admin       
-Buford    | sqlinjection | Admin       
-Rupa      | nopasswords  | Client      
-
-For ```app_admin.py```, the following admin users are registered:
-Username  | Password     | Permissions 
---------- | ------------ | -----------
-Mihir     | iloveCS      | Admin       
-Buford    | sqlinjection | Admin   
-
+Username  | Password                 |  Permissions
+--------- | -------------------------| ------------------------
+```Mihir```     | ```iloveCS```      | Admin       
+```Buford```    | ```sqlinjection``` | Admin       
+```Rupa```      | ```nopasswords```  | Client      
 
 
 **Here is a suggested guide to using ```app_admin.py```:**
