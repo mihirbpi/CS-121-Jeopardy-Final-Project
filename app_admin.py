@@ -51,7 +51,7 @@ def get_conn():
         elif err.errno == errorcode.ER_BAD_DB_ERROR and DEBUG:
             sys.stderr.write('Database does not exist.\n')
         elif DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
         else:
             # A fine catchall client-facing message.
             sys.stderr.write('An error occurred, please contact the administrator.\n')
@@ -84,7 +84,7 @@ def avg_player_winnings(player_name):
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
@@ -113,7 +113,7 @@ def total_player_winnings(player_name):
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
@@ -142,7 +142,7 @@ def total_season_winnings(season_number):
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n')
@@ -169,14 +169,14 @@ def add_new_contestant(player_id, first_name, last_name, city, state,
     except ValueError or mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player\'s first name and last name are required fields.\n')
     except mysql.connector.IntegrityError as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player\'s first name and last name are required fields.\n')
@@ -220,7 +220,7 @@ def authenticate_user(username, password):
     except mysql.connector.Error as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
-            sys.stderr.write(err)
+            sys.stderr.write(str(err))
             sys.exit(1)
         else:
             sys.stderr.write('An error occurred, please try again or contact an administrator.\n')
