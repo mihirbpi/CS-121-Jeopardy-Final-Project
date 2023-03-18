@@ -27,7 +27,9 @@ https://github.com/anuparna/jeopardy/tree/master/dataset
 
 Make sure you have MySQL downloaded and available through your
 device's command-line. Also make sure you are in the folder containing all the project's
-files.
+files. 
+
+If you are downloading the project files from CodePost, you will need to follow the instructions in ```link-to-data.txt``` fo download all the data files.
 
 First, open MySQL on the command line and create a Jeopardy! database in MySQL using the following commands (not including the "mysql>" prompt):
 ```
