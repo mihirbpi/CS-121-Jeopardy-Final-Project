@@ -72,7 +72,7 @@ you may want to run ```app_admin.py``` first.
 
 **The following are the usernames/passwords to use for the Python apps:**
 
-For ```app_admin.py```, the following admin/client users are registered:
+For ```app_admin.py```, the following admin users are registered:
 Username  | Password                 |  Permissions
 --------- | -------------------------| ------------------------
 ```Mihir```     | ```iloveCS```      | Admin       
@@ -94,7 +94,7 @@ Username  | Password                 |  Permissions
     
 3. Select option ```(t)```, follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
     
-4. Select option ```(c)```, follow the instruction that are printed, and enter the information for a new contestant with the player_id ```113011```.
+4. Select option ```(c)```, follow the instructions that are printed, and enter the information for a new contestant with the player_id ```113011```.
     
 5. Select option ```(c)``` again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113012```.
     
