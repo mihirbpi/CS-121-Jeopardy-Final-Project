@@ -59,9 +59,6 @@ $ pip3 install mysqlclient
 
 After loading the data and verifying you are in the correct database, 
 run one of the following (not including the "$") to open the Python application you want to use:
-
-**Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of app_client.py plus some additional ones, so
-you may want to run ```app_admin.py``` first.
 ```
 $ python3 app_admin.py
 ```
