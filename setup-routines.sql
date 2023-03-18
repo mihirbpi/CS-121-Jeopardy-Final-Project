@@ -162,17 +162,11 @@ CREATE PROCEDURE sp_add_contestant(
     IN p_occupation         VARCHAR(200)
 )
 sp: BEGIN
-    IF EXISTS (SELECT player_id FROM contestants WHERE player_id = 
-    p_player_id) THEN
-        -- player already exists, exit procedure
-        LEAVE sp;
-    ELSE
         -- insert new player
         INSERT INTO contestants (player_id, first_name, last_name, 
         hometown_city, hometown_state, occupation)
         VALUES (p_player_id, p_first_name, p_last_name, p_hometown_city, 
         p_hometown_state, p_occupation);
-    END IF;
 END !
 DELIMITER ;
 
