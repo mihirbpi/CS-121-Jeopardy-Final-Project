@@ -56,7 +56,6 @@ mysql> quit;
 Please install the Python MySQL Connector using pip3 with the following commands (not including the "$"), if not installed already.
 ```
 $ pip3 install mysql-connector-python
-$ pip3 install mysql-connector-python-rf
 ```
 
 After loading the data and verifying you are in the correct database, 
@@ -75,7 +74,6 @@ $ pip3 uninstall mysql-connector
 $ pip3 uninstall mysql-connector-python
 $ pip3 uninstall mysql-connector-python-rf
 $ pip3 install mysql-connector-python
-$ pip3 install mysql-connector-python-rf
 ```
 
 If that does not work please contact one of the contributors.
