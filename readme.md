@@ -55,10 +55,8 @@ mysql> quit;
 
 Please install the Python MySQL Connector using pip3 with the following commands (not including the "$"), if not installed already.
 ```
-$ pip3 install mysql
 $ pip3 install mysql-connector-python
 $ pip3 install mysql-connector-python-rf
-$ pip3 install mysqlclient
 ```
 
 After loading the data and verifying you are in the correct database, 
@@ -69,6 +67,15 @@ $ python3 app_admin.py
 OR
 ```
 $ python3 app_client.py
+```
+
+If there is an error right away after running either Pyhon application, you may want to run the following commands:
+```
+$ pip3 uninstall mysql-connector
+$ pip3 uninstall mysql-connector-python
+$ pip3 uninstall mysql-connector-python-rf
+$ pip3 install mysql-connector-python
+$ pip3 install mysql-connector-python-rf
 ```
 
 **Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of ```app_client.py``` plus some additional ones, so
