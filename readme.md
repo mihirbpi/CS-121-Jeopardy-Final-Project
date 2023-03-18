@@ -69,7 +69,7 @@ OR
 $ python3 app_client.py
 ```
 
-If there is an error right away after running either Pyhon application, you may want to run the following commands:
+If there is an error right away after running either Python application, you may want to run the following commands:
 ```
 $ pip3 uninstall mysql-connector
 $ pip3 uninstall mysql-connector-python
