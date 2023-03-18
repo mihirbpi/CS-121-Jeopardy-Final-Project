@@ -29,13 +29,13 @@ Make sure you have MySQL downloaded and available through your
 device's command-line. Also make sure you are in the folder containing all the project's
 files.
 
-First, open MySQL on the command line and create the following database in MySQL:
+First, open MySQL on the command line and create a Jeopardy! database in MySQL using the following commands (not including the "mysql>" prompt):
 ```
 mysql> CREATE DATABASE jeopardydb;
 mysql> USE jeopardydb;
 ```
 
-Not including the "mysql>" prompt, run the following lines of code on your command-line
+Run the following lines of code on your command-line (not including the "mysql>" prompt)
 after creating and using the Jeopardy! database:
 ```
 mysql> source setup.sql;
