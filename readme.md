@@ -2,6 +2,8 @@
 
 **Contributors:** **Mihir Borkar** and **Rupa Kurinchi-Vendhan**
 
+**Contributor emails:** mborkar@caltech.edu and rkurinch@caltech.edu
+
 **Introduction:**
 
 This is our final project for CS 121 Relational Databases at Caltech.
