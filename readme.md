@@ -44,46 +44,45 @@ mysql> source setup-passwords.sql;
 mysql> source setup-routines.sql;
 mysql> source grant-permissions.sql;
 mysql> source queries.sql;
+mysql> quit;
 ```
-
 
 **Instructions for Python programs:**
 
-Please install the Python MySQL Connector using pip3 if not installed already.
+Please install the Python MySQL Connector using pip3 with the following commands (not including the "$"), if not installed already.
 ```
-pip3 install mysql
-pip3 install mysql-connector-python
-pip3 install mysql-connector-python-rf
-pip3 install mysqlclient
+$ pip3 install mysql
+$ pip3 install mysql-connector-python
+$ pip3 install mysql-connector-python-rf
+$ pip3 install mysqlclient
 ```
 
 After loading the data and verifying you are in the correct database, 
-run one of the following (not including the "mysql>" or "$") to open the Python application you want to use:
+run one of the following (not including the "$") to open the Python application you want to use:
 
-**Note:** Details on how to use each Python app are further below. app_admin.py has all the same features of app_client.py plus some additional ones, so
-you may want to run app_admin.py first.
+**Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of app_client.py plus some additional ones, so
+you may want to run ```app_admin.py``` first.
 ```
-mysql> quit;
-$ python3 app_client.py
+$ python3 app_admin.py
 ```
 OR
 ```
-mysql> quit;
-$ python3 app_admin.py
+$ python3 app_client.py
 ```
 
-
+**Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of ```app_client.py``` plus some additional ones, so
+you may want to run ```app_admin.py``` first.
 
 **The following are the usernames/passwords to use for the Python apps:**
 
-For app_client.py, the following admin/client users are registered:
+For ```app_client.py```, the following admin/client users are registered:
 Username  | Password     | Permissions
 --------- | ------------ | -----------
 Mihir     | iloveCS      | Admin       
 Buford    | sqlinjection | Admin       
 Rupa      | nopasswords  | Client      
 
-For app_admin.py, the following admin users are registered:
+For ```app_admin.py```, the following admin users are registered:
 Username  | Password     | Permissions 
 --------- | ------------ | -----------
 Mihir     | iloveCS      | Admin       
@@ -91,7 +90,7 @@ Buford    | sqlinjection | Admin
 
 
 
-**Here is a suggested guide to using app_admin.py:**
+**Here is a suggested guide to using ```app_admin.py```:**
     
 1. Login with the username Mihir and the corresponding password.
     
@@ -133,7 +132,7 @@ Buford    | sqlinjection | Admin
     as well as how many times each user updated the contestants displayed on the screen in two tables.
     
         
-**Here is a suggested guide to using app_client.py:**
+**Here is a suggested guide to using ```app_client.py```:**
 1. Login with the username Rupa and the corresponding password.
     
 2. Select option (s), follow the instructions that are printed, and enter the season number 25 to get the total winnings over that season.
