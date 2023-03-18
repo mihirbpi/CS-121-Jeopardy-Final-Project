@@ -47,14 +47,14 @@ def get_conn():
         # simulated program. Their user information would be in a users table
         # specific to your database; hence the DEBUG use.
         if err.errno == errorcode.ER_ACCESS_DENIED_ERROR and DEBUG:
-            sys.stderr('''Incorrect username or password when connecting to DB.\n''')
+            sys.stderr('Incorrect username or password when connecting to DB.\n')
         elif err.errno == errorcode.ER_BAD_DB_ERROR and DEBUG:
             sys.stderr('Database does not exist.\n')
         elif DEBUG:
             sys.stderr(err)
         else:
             # A fine catchall client-facing message.
-            sys.stderr('''An error occurred, please contact the administrator.\n''')
+            sys.stderr('An error occurred, please contact the administrator.\n')
         sys.exit(1)
 
 # ----------------------------------------------------------------------
@@ -78,7 +78,7 @@ def avg_player_winnings(player_name):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print('''That player does not have any winnings associated with them\n''')
+            print('That player does not have any winnings associated with them\n')
         else:
             print("Avg winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -87,7 +87,7 @@ def avg_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n''')
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
 
 def total_player_winnings(player_name):
     """"
@@ -107,7 +107,7 @@ def total_player_winnings(player_name):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print('''That player does not have any winnings associated with them\n''')
+            print('That player does not have any winnings associated with them\n')
         else:
             print("Total winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -116,7 +116,7 @@ def total_player_winnings(player_name):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n''')
+            sys.stderr.write('Please make sure you enter a valid Jeopardy! player name (capitalized first_name, followed by a space, followed by capitalized last_name) or contact the administrator\n')
 
 def total_season_winnings(season_number):
     """"
@@ -136,7 +136,7 @@ def total_season_winnings(season_number):
             (result) = (row) # tuple unpacking!
             # do stuff with row data
         if (not result or not result[0]):
-            print('''That season does not have any winnings associated with it\n''')
+            print('That season does not have any winnings associated with it\n')
         else:
             print("Total season winnings: " + str(result[0]) + "\n")
     except mysql.connector.Error as err:
@@ -145,7 +145,7 @@ def total_season_winnings(season_number):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n''')
+            sys.stderr.write('Please make sure you enter a valid INTEGER Jeopardy! season (16-33) or contact the administrator\n')
 
 def add_new_contestant(player_id, first_name, last_name, city, state, 
                        occupation):
@@ -172,14 +172,14 @@ def add_new_contestant(player_id, first_name, last_name, city, state,
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player's first name and last name are required fields.\n''')
+            sys.stderr.write('Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player\'s first name and last name are required fields.\n')
     except mysql.connector.IntegrityError as err:
         # If you're testing, it's helpful to see more details printed.
         if DEBUG:
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player's first name and last name are required fields.\n''')
+            sys.stderr.write('Please make sure you enter a valid INTEGER player_id that does not already exist. Also the player\'s first name and last name are required fields.\n')
 
 # ----------------------------------------------------------------------
 # Functions for Logging Users In
@@ -200,8 +200,7 @@ def authenticate_user(username, password):
     cursor = conn.cursor()
     # Remember to pass arguments as a tuple like so to prevent SQL
     # injection.
-    sql = '''SELECT authenticate(\'%s\', \'%s\') AS login, is_admin FROM 
-    user_info WHERE username=\'%s\';''' % (username, password, username)
+    sql = 'SELECT authenticate(\'%s\', \'%s\') AS login, is_admin FROM user_info WHERE username=\'%s\';' % (username, password, username)
     try:
         cursor.execute(sql)
         # row = cursor.fetchone()
@@ -224,7 +223,7 @@ def authenticate_user(username, password):
             sys.stderr.write(err)
             sys.exit(1)
         else:
-            sys.stderr.write('''An error occurred, please try again or contact an administrator.\n''')
+            sys.stderr.write('An error occurred, please try again or contact an administrator.\n')
             return False
         
 def login():
@@ -254,28 +253,28 @@ def show_admin_options():
     if ans == 'q':
         quit_ui()
     elif ans == 'a':
-        print('''This option returns the average Jeopardy! winnings of a player over seasons 16-33''')
-        print('''Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name''')
+        print('This option returns the average Jeopardy! winnings of a player over seasons 16-33')
+        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
         print('For example: Ken Jennings')
         player_name = input('Enter player_name: ')
         avg_player_winnings(player_name)
     elif ans == 't':
-        print('''This option returns the total Jeopardy! winnings of a player over seasons 16-33''')
-        print('''Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name''')
+        print('This option returns the total Jeopardy! winnings of a player over seasons 16-33')
+        print('Enter player_name as capitalized first_name, followed by a space, followed by capitalized last_name')
         print('For example: Ken Jennings')
         player_name = input('Enter player_name: ')
         total_player_winnings(player_name)
     elif ans == 's':
-        print('''This option returns the total winnings over an an entire  Jeopardy! season (only supports seasons 16-33)''')
+        print('This option returns the total winnings over an an entire  Jeopardy! season (only supports seasons 16-33)')
         print('Enter a season number (an integer 16-33)')
         print('For example: 25')
         season_number = input('Enter season number: ')
         total_season_winnings(season_number)
     elif ans == 'c':
-        print('''This option allows you to add a new contestant to the database''')
+        print('This option allows you to add a new contestant to the database')
         print('Enter an INTEGER player_id that does not already exist')
         print('For example: 113011 or higher')
-        print('''Also please enter the player first name and last name when prompted''')
+        print('Also please enter the player first name and last name when prompted')
         player_id = input('Enter player_id: ')
         first_name = input('Enter first_name (capitalized): ')
         last_name = input('Enter last_name (capitalized): ')
