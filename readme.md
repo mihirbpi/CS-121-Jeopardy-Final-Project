@@ -3,6 +3,7 @@
 **Contributors:** **Mihir Borkar** and **Rupa Kurinchi-Vendhan**
 
 **Introduction:**
+
 This is our final project for CS 121 Relational Databases at Caltech.
 
 Our project was working with a Jeopardy! database with information about 18 previous seasons.
@@ -92,27 +93,27 @@ Username  | Password                 |  Permissions
     
 1. Login with the username ```Mihir``` and the corresponding password.
     
-2. Select option (s), follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
+2. Select option ```(s)```, follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
     
-3. Select option (t), follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
+3. Select option ```(t)```, follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
     
-4. Select option (c), follow the instruction that are printed, and enter the information for a new contestant with the player_id ```113011```.
+4. Select option ```(c)```, follow the instruction that are printed, and enter the information for a new contestant with the player_id ```113011```.
     
-5. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113012```.
+5. Select option ```(c)``` again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113012```.
     
-6. Select option (q) to quit the application.
+6. Select option ```(q)``` to quit the application.
     
 7. Run ```$ python3 app_admin.py``` (without the "$") in the command line again to reopen the application.
     
-8. Try to login with the client username Rupa and the corresponding password.
+8. Try to login with the client username ```Rupa``` and the corresponding password.
     
 9. Run ```$ python3 app_admin.py``` (without the "$") in the command line again to reopen the application.
     
 10. Login with the username ```Buford``` and the corresponding password.
     
-11. Select option (c) again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113013```.
+11. Select option ```(c)``` again, follow the instructions that are printed, and enter the information for another, different new contestant with the player_id ```113013```.
     
-12.  Select option (q) to quit the application.
+12.  Select option ```(q)``` to quit the application.
     
 13. Open MySQL on the command line and perform the following commands (without the "mysql>" prompt):
     ```
@@ -133,11 +134,11 @@ Username  | Password                 |  Permissions
 **Here is a suggested guide to using ```app_client.py```:**
 1. Login with the username ```Rupa``` and the corresponding password.
     
-2. Select option (s), follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
+2. Select option ```(s)```, follow the instructions that are printed, and enter the season number ```25``` to get the total winnings over that season.
     
-3. Select option (t), follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
+3. Select option ```(t)```, follow the instructions that are printed, and enter the player name ```Ken Jennings``` to get Ken Jennings' total winnings.
     
-4. Select option (q) to quit the application.
+4. Select option ```(q)``` to quit the application.
 
 
 **Files written to user's system:**
