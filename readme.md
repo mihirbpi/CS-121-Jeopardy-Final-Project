@@ -41,6 +41,9 @@ mysql> USE jeopardydb;
 
 Run the following lines of code on your command-line (not including the "mysql>" prompt)
 after creating and using the Jeopardy! database:
+
+**Note:** The ```source load-data.sql``` command can take up to 40 seconds to run due to the size of the dataset.
+
 ```
 mysql> source setup.sql;
 mysql> source load-data.sql;
@@ -60,6 +63,10 @@ $ pip3 install mysql-connector-python
 
 After loading the data and verifying you are in the correct database, 
 run one of the following (not including the "$") to open the Python application you want to use:
+
+**Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of ```app_client.py``` plus some additional ones, so
+you may want to run ```app_admin.py``` first.
+
 ```
 $ python3 app_admin.py
 ```
@@ -77,9 +84,6 @@ $ pip3 install mysql-connector-python
 ```
 
 If that does not work please contact one of the contributors.
-
-**Note:** Details on how to use each Python app are further below. ```app_admin.py``` has all the same features of ```app_client.py``` plus some additional ones, so
-you may want to run ```app_admin.py``` first.
 
 **The following are the usernames/passwords to use for the Python apps:**
 
