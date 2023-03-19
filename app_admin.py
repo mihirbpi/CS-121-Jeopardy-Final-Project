@@ -37,7 +37,8 @@ def get_conn():
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
           password='adminpw',
-          database='jeopardydb' # replace this with your database name
+          database='jeopardydb',
+          auth_plugin='mysql_native_password'
         )
         print('Successfully connected.\n')
         return conn
@@ -276,9 +277,9 @@ def show_admin_options():
         print('For example: 113011 or higher')
         print('Also please enter the player first name and last name when prompted')
         player_id = input('Enter player_id: ')
-        first_name = input('Enter first_name (capitalized): ')
-        last_name = input('Enter last_name (capitalized): ')
-        city = input('Enter city of residence (capitalized): ')
+        first_name = input('Enter first_name (e.g. John): ')
+        last_name = input('Enter last_name (e.g. Doe): ')
+        city = input('Enter city of residence (e.g. Pasadena): ')
         state = input('Enter state of residence (e.g. CA): ')
         occupation = input('Enter occupation (e.g. doctor): ')
         add_new_contestant(player_id, first_name, last_name, city, state,

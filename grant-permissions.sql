@@ -1,8 +1,8 @@
 DROP USER IF EXISTS 'jeopardyadmin'@'localhost';
 DROP USER IF EXISTS 'jeopardyclient'@'localhost';
 
-CREATE USER 'jeopardyadmin'@'localhost' IDENTIFIED BY 'adminpw';
-CREATE USER 'jeopardyclient'@'localhost' IDENTIFIED BY 'clientpw';
+CREATE USER 'jeopardyadmin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'adminpw';
+CREATE USER 'jeopardyclient'@'localhost' IDENTIFIED WITH mysql_native_password BY 'clientpw';
 
 -- Can add more users or refine permissions
 GRANT ALL PRIVILEGES ON jeopardydb.* TO 'jeopardyadmin'@'localhost';

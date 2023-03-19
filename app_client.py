@@ -35,7 +35,8 @@ def get_conn():
           # SHOW VARIABLES WHERE variable_name LIKE 'port';
           port='3306',  # this may change!
           password='clientpw',
-          database='jeopardydb' # replace this with your database name
+          database='jeopardydb',
+          auth_plugin='mysql_native_password'
         )
         print('Successfully connected.\n')
         return conn
